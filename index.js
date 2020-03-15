@@ -89,15 +89,32 @@ const element = (type, _params = {}) => {
   if (params.class) newElement.setAttribute('class', params.class);
   if (params.style) newElement.setAttribute('style', params.style);
   if (params.text) newElement.innerText = params.text;
+  if (params.event) newElement.addEventListener(params.event.type, params.event.handler);
   return newElement;
 };
+const clss = (arg) => {
+  if (!arg && !arg.element) return false;
+  if (arg.add) {
+    if (!arg.element.classList.contains(arg.add)) {
+      arg.element.classList.add(arg.add);
+    }
+  }
+  if (arg.remove) {
+    if (arg.element.classList.contains(arg.remove)) {
+      arg.element.classList.remove(arg.remove);
+    }
+  }
+};
+
 const s = (_) => JSON.stringify(_);
+
 (()=>{
   const obj = {
     cssCorn: null,
     data: [],
     scene: null,
     isSceneReady: false,
+    isStartGame: false,
   };
 
   const countX = 9;
@@ -166,15 +183,53 @@ const s = (_) => JSON.stringify(_);
         justify-content: center;
         align-items: center;
         align-content: center;
-        transition:
-          width 0.15s 0s ease-out,
-          height 0.15s 0s ease-out,
-          font-size 0.25s 0s ease-out;
-          font-weight 0.25s 0s ease-out;
+        transition: width 0.15s 0s ease-out, height 0.15s 0s ease-out, font-size 0.25s 0s ease-out;
+        font-weight 0.25s 0s ease-out;
     `)
         .add('.scene div span', `
         transition: transform 0.25s 0s ease-out;
-    `);
+    `)
+        .add('.startScreen', `
+        display: flex;
+        background-color: #fff;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        font-size: 18px;
+    `)
+        .add('.btn', `
+        display: inline-block;
+        background-color: #fff;
+        outline: 1px solid #ccc;
+        padding: 1em 2em;
+        margin-bottom: 1em;
+        line-height: 1;
+        font-size: 18px;
+        cursor: pointer;
+    `)
+        .add('.btn:hover', `
+        display: inline-block;
+        background-color: #efa;
+        outline: 2px solid #ccc;
+    `)
+        .add('.navigationPanel', `
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 1em;
+    `)
+        .add('.invisible', `background: rgb(230,230,230)!important; `)
+        .add('.invisible span', ` opacity: 0!important; `);
   };
 
   obj.makeScene = async () => {
@@ -188,7 +243,11 @@ const s = (_) => JSON.stringify(_);
         });
         obj.loading = document.body.querySelector('.loading');
         if (!obj.loading) {
-          obj.loading = element('div', {id: 'loading', class: 'loading', text: 'Loading! Please wait!...'});
+          obj.loading = element('div', {
+            id: 'loading',
+            class: 'loading',
+            text: 'Loading! Please wait!...',
+          });
         }
         insert(obj.scene);
         insert(obj.loading);
@@ -366,6 +425,7 @@ const s = (_) => JSON.stringify(_);
         error += `background: rgba(255, 0, 0, 0.30);`;
 
         const newElement = element('div', {
+          class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : 'invisible',
           style: xItem.double ? error : stdStyle,
         });
         const span = element('span', {
@@ -376,15 +436,6 @@ const s = (_) => JSON.stringify(_);
         insert(newElement, obj.scene);
       });
     });
-    setTimeout(() => {
-      if (obj.scene.classList.contains('hidden')) {
-        obj.scene.classList.remove('hidden');
-      }
-      if (!obj.loading.classList.contains('hidden')) {
-        obj.loading.classList.add('hidden');
-      }
-      obj.isSceneReady = true;
-    }, 1000);
   };
 
   obj.loop = (callbackArray) => {
@@ -397,16 +448,19 @@ const s = (_) => JSON.stringify(_);
       const wHeigth = window.innerHeight - 20;
       const sqSize = Math.min(wWidth, wHeigth);
 
+      for (let i = 0; i < callbackArray.data.length; i++) {
+        await callbackArray.data[i]();
+      }
       let x = 0;
       let y = 0;
       const childrens = [...obj.scene.querySelectorAll('div')];
-      for (var i = 0; i < childrens.length; i++) {
-        let item =  childrens[i];
+      for (let i = 0; i < childrens.length; i++) {
+        const item = childrens[i];
         if (x > countX - 1) {
           x=0; y++;
         }
-        for (let i = 0; i < callbackArray.length; i++) {
-          await callbackArray[i]({x, y, item, wWidth, wHeigth, sqSize});
+        for (let i = 0; i < callbackArray.render.length; i++) {
+          await callbackArray.render[i]({x, y, item, wWidth, wHeigth, sqSize});
         }
         x++;
       }
@@ -417,7 +471,7 @@ const s = (_) => JSON.stringify(_);
   };
 
   obj.sizeControll = (arg) => {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (obj.isSceneReady) {
         const {x, y, item, wWidth, wHeigth, sqSize} = arg;
         obj.scene.style.width = `${sqSize}px`;
@@ -428,20 +482,130 @@ const s = (_) => JSON.stringify(_);
       return resolve();
     });
   };
+
   obj.charsMutate = (arg) => {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (obj.isSceneReady) {
         const {x, y, item, wWidth, wHeigth, sqSize} = arg;
         const fqtr = rndMinMaxInt(0, 222);
-        if (d(fqtr, [ 13, 121])) item.style.fontSize = `${rndMinMax(0.9, 3.1)}em`;
-        if (d(fqtr, [ 5, 221])) item.style.fontFamily = rndFromArray(fonts);
-        if (d(fqtr, [ 13, 147])) {
+        if (d(fqtr, [13, 121])) item.style.fontSize = `${rndMinMax(0.9, 3.1)}em`;
+        if (d(fqtr, [5, 221])) item.style.fontFamily = rndFromArray(fonts);
+        if (d(fqtr, [13, 147])) {
           item.querySelector('span')
-          .style.transform = `rotate(${rndMinMaxInt(-22, 22)}deg)`;
+              .style.transform = `rotate(${rndMinMaxInt(-22, 22)}deg)`;
         }
       }
       return resolve();
     });
+  };
+
+  obj.watchWin = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isStartGame) {
+        let hasInvisible = true;
+        for (let dy = 0; dy < obj.data.length; dy++) {
+          for (let dx = 0; dx < obj.data[dy].length; dx++) {
+            let element = obj.data[dy][dx];
+            if(!element.isVisible) hasInvisible = false;
+            break;
+          }
+          if(!hasInvisible) break;
+        }
+        console.log('not win');
+        return resolve();
+      } else {
+        return resolve();
+      }
+    });
+  };
+
+  obj.makeGame = (_levelSelector='ease') => {
+    const levels = {
+      'ease': [13, 23],
+      'hard': [2, 3, 5],
+    };
+    let levelSelector = null;
+    if (!Object.keys(levels).includes(_levelSelector)) levelSelector = 'ease';
+    else levelSelector = _levelSelector;
+    obj.data.forEach((itemY, y) => {
+      itemY.forEach((itemX, x) => {
+        const fqtr = rndMinMaxInt(0, 222);
+        obj.data[y][x].isVisible = d(fqtr, levels[levelSelector]) ? true : false;
+      });
+    });
+  };
+
+  obj.makeStartScreen = () => {
+    obj.startScreen = element('div', {
+      id: 'startScreen',
+      class: 'startScreen hidden',
+    });
+    obj.btnShowSudoku = element('div', {
+      id: 'btnShowSudoku',
+      class: 'btnShowSudoku btn',
+      text: 'Show sudoku',
+      event: {
+        type: 'click',
+        handler() {
+          clss({element: obj.scene, remove: 'hidden'});
+          clss({element: obj.startScreen, add: 'hidden'});
+          clss({element: obj.navigationPanel, remove: 'hidden'});
+          obj.render();
+          obj.isSceneReady = true;
+        },
+      },
+    });
+
+    obj.btnStartGame = element('div', {
+      id: 'btnStartGame',
+      class: 'btnStartGame btn',
+      text: 'Start game',
+      event: {
+        type: 'click',
+        handler() {
+          obj.makeGame('ease');
+          clss({element: obj.scene, remove: 'hidden'});
+          clss({element: obj.startScreen, add: 'hidden'});
+          clss({element: obj.navigationPanel, remove: 'hidden'});
+          obj.render();
+          obj.isSceneReady = true;
+          obj.isStartGame = true;
+        },
+      },
+    });
+
+
+    insert(obj.btnShowSudoku, obj.startScreen);
+    insert(obj.btnStartGame, obj.startScreen);
+    insert(obj.startScreen);
+    clss({element: obj.loading, add: 'hidden'});
+    clss({element: obj.startScreen, remove: 'hidden'});
+  };
+
+  obj.makeNavigation = () => {
+    obj.navigationPanel = element('div', {
+      id: 'navigationPanel',
+      class: 'navigationPanel hidden',
+    });
+    obj.navigationBack = element('div', {
+      id: 'navigationBack',
+      class: 'navigationBack btn',
+      text: 'Back',
+      event: {
+        type: 'click',
+        handler() {
+          window.location.reload();
+        },
+      },
+    });
+
+    insert(obj.navigationBack, obj.navigationPanel);
+    insert(obj.navigationPanel);
+  };
+
+  obj.makeUI = () => {
+    obj.makeStartScreen();
+    obj.makeNavigation();
   };
 
   obj.init = async () => {
@@ -449,11 +613,16 @@ const s = (_) => JSON.stringify(_);
     obj.addStyles();
     await obj.makeScene();
     await obj.createData();
-    obj.render();
-    obj.loop([
-      obj.sizeControll,
-      obj.charsMutate,
-    ]);
+    obj.makeUI();
+    obj.loop({
+      render: [
+        obj.sizeControll,
+        obj.charsMutate,
+      ],
+      data: [
+        obj.watchWin,
+      ],
+    });
   };
 
   obj.run = () => {
