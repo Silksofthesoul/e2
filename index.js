@@ -1,4 +1,6 @@
+const rndMinMax = (min, max) => Math.random() * (max - min) + min;
 const rndMinMaxInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const rndFromArray = (arr) => arr[rndMinMaxInt(0, arr.length - 1)];
 const makeMatrix = async (width, height, fn) => {
   const result = [];
   for (let y = 0; y < height; y++) {
@@ -46,6 +48,7 @@ const range = (...args) => {
   }
   return result;
 };
+const inRange = (val, a, b) => val >= a && val < b;
 
 const rotateSqMatrixRight = (arr) => {
   const y = arr.length;
@@ -87,15 +90,31 @@ const s = (_) => JSON.stringify(_);
     cssCorn: null,
     data: [],
     scene: null,
+    isSceneReady: false,
   };
 
-  obj.addStyles = () => {
-    console.log('[addStyles]');
-    const width = 600;
-    const height = width;
-    const countX = 9;
-    const countY = countX;
+  const countX = 9;
+  const countY = countX;
+  const fonts = [
+    'Georgia, serif',
+    '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+    '"Times New Roman", Times, serif',
+    'Arial, Helvetica, sans-serif',
+    '"Arial Black", Gadget, sans-serif',
+    'Impact, Charcoal, sans-serif',
+    '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+    'Tahoma, Geneva, sans-serif',
+    '"Trebuchet MS", Helvetica, sans-serif',
+    'Verdana, Geneva, sans-serif',
+    '"Courier New", Courier, monospace',
+    '"Lucida Console", Monaco, monospace',
+  ];
 
+  obj.addStyles = () => {
+    // console.log('[addStyles]');
+    const wWidth = window.innerWidth - 20;
+    const wHeigth = window.innerHeight - 20;
+    const sqSize = Math.min(wWidth, wHeigth);
     obj.cssCorn
         .add('body', `
         display: flex;
@@ -111,6 +130,10 @@ const s = (_) => JSON.stringify(_);
         line-height: 1;
         font-size: 18px;
     `)
+        .add('.loading', `
+        font-size: ${rndMinMax(1.2, 4.5)}em;
+        font-family: ${rndFromArray(fonts)};
+    `)
         .add('.hidden', `
         display: none!important;
     `)
@@ -120,25 +143,46 @@ const s = (_) => JSON.stringify(_);
         justify-content: flex-start;
         flex-wrap: wrap;
         background: rgba(255, 0, 0, 0.15);
-        width: 600px;
-        height: 600px;
+        width: ${sqSize}px;
+        height: ${sqSize}px;
+        transition: width 0.15s 0s ease-out, height 0.1s 0s ease-out;
     `)
         .add('.scene div', `
         box-sizing: border-box;
         text-align: center;
-        line-height: 3.6em;
+        line-height: 1;
         outline: 1px solid rgba(255, 0, 0, 0.25);
-        width: ${width / countX}px;
-        height: ${height / countY}px;
+        width: ${sqSize / countX}px;
+        height: ${sqSize / countY}px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        transition:
+          width 0.15s 0s ease-out,
+          height 0.15s 0s ease-out,
+          font-size 0.25s 0s ease-out;
+          font-weight 0.25s 0s ease-out;
+    `)
+        .add('.scene div span', `
+        transition: transform 0.25s 0s ease-out;
     `);
   };
 
   obj.makeScene = async () => {
     return new Promise(function(resolve, reject) {
       setTimeout(() => {
-        console.log('[makeScene]');
-        obj.scene = element('div', {id: 'scene', class: 'scene hidden'});
-        obj.loading = element('div', {id: 'loading', class: 'loading', text: 'Loading! Please wait!...'});
+        // console.log('[makeScene]');
+        obj.scene = element('div', {
+          id: 'scene',
+          class: 'scene hidden',
+          style: 'transform: scale(1);',
+        });
+        obj.loading = document.body.querySelector('.loading');
+        if (!obj.loading) {
+          obj.loading = element('div', {id: 'loading', class: 'loading', text: 'Loading! Please wait!...'});
+        }
         insert(obj.scene);
         insert(obj.loading);
         resolve();
@@ -171,8 +215,7 @@ const s = (_) => JSON.stringify(_);
                 x >= startX && x < startX + width ?
                   fn(x, y, itemX) : itemX)
                   : itemY);
-    const rndFromArray = (arr) => arr[rndMinMaxInt(0, arr.length - 1)];
-    const inRange = (val, a, b) => val >= a && val < b;
+
 
     const asset = range(1, 9);
     const width = 9;
@@ -305,6 +348,10 @@ const s = (_) => JSON.stringify(_);
         stdStyle += `${x === 2 || x === 5 ? borderRight : ''}`;
         stdStyle += `${y === 2 || y === 5 ? borderBottom : ''}`;
         stdStyle += `background: rgba(255, 255, 255, 1);`;
+        stdStyle += `
+          font-size: ${rndMinMax(0.9, 3.1)}em;
+          font-family: ${rndFromArray(fonts)};
+        `;
 
         let error = ``;
         error += `${x === 2 || x === 5 ? borderRight : ''}`;
@@ -312,9 +359,13 @@ const s = (_) => JSON.stringify(_);
         error += `background: rgba(255, 0, 0, 0.30);`;
 
         const newElement = element('div', {
-          text: str(xItem.value),
           style: xItem.double ? error : stdStyle,
         });
+        const span = element('span', {
+          text: str(xItem.value),
+          style: `transform: rotate(${rndMinMaxInt(-22, 22)}deg);`,
+        });
+        insert(span, newElement);
         insert(newElement, obj.scene);
       });
     });
@@ -325,15 +376,68 @@ const s = (_) => JSON.stringify(_);
       if (!obj.loading.classList.contains('hidden')) {
         obj.loading.classList.add('hidden');
       }
+      obj.isSceneReady = true;
     }, 1000);
   };
 
   obj.init = async () => {
     obj.cssCorn = new $CssCorn({id: 'cssCorn', willRender: true});
+    obj.addStyles();
     await obj.makeScene();
     await obj.createData();
-    obj.addStyles();
     obj.render();
+
+    let timeout = rndMinMaxInt(80, 320);
+    const windowSizeWatcher = () => {
+      // console.log('watch');
+      if (obj.isSceneReady) {
+        timeout = rndMinMaxInt(80, 220);
+        const countX = 9;
+        const countY = 9;
+        const wWidth = window.innerWidth - 20;
+        const wHeigth = window.innerHeight - 20;
+        const sqSize = Math.min(wWidth, wHeigth);
+
+        let x = 0;
+        let y = 0;
+        obj.scene.setAttribute('style', `width: ${sqSize}px; height: ${sqSize}px`);
+        [...obj.scene.querySelectorAll('div')].forEach((item) => {
+          if (x>8) {
+            x=0; y++;
+          }
+
+          const borderRight = 'border-right: 3px solid rgba(0,0,100,0.5);';
+          const borderBottom = 'border-bottom: 3px solid rgba(0,0,100,0.5);';
+
+          const fqtr = rndMinMaxInt(0, 222);
+
+          const d = (f, arr) => {
+            for (let i = 0; i < arr.length; i++) {
+              if (f % arr[i] === 0) return true;
+            }
+            return false;
+          };
+
+          let stdStyle = ``;
+          stdStyle += `${x === 2 || x === 5 ? borderRight : ''}`;
+          stdStyle += `${y === 2 || y === 5 ? borderBottom : ''}`;
+          stdStyle += `background: rgba(255, 255, 255, 1);`;
+          stdStyle += `
+          width: ${sqSize / countX}px;
+          height: ${sqSize / countY}px;
+          ${d(fqtr, [13, 121]) ? 'font-size: ' + rndMinMax(0.9, 3.1) + 'em;': ''}
+          ${d(fqtr, [5, 221]) ? 'font-family: ' + rndFromArray(fonts): ''}
+          `;
+          item.setAttribute('style', stdStyle);
+          item.querySelector('span').setAttribute('style', `
+            ${d(fqtr, [13, 147]) ? 'transform: rotate(' + rndMinMaxInt(-22, 22)+'deg);':''}
+          `);
+          x++;
+        });
+      }
+      setTimeout(windowSizeWatcher, timeout);
+    };
+    windowSizeWatcher();
   };
 
   obj.run = () => {
