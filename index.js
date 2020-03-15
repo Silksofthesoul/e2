@@ -68,6 +68,13 @@ const rotateSqMatrixRight = (arr) => {
 
 const str = (_) => String(_);
 
+const d = (f, arr) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (f % arr[i] === 0) return true;
+  }
+  return false;
+};
+
 const insert = (child, _root=null) => {
   const root = _root || document.body;
   if (!child) return false;
@@ -380,64 +387,73 @@ const s = (_) => JSON.stringify(_);
     }, 1000);
   };
 
+  obj.loop = (callbackArray) => {
+    let timeout = rndMinMaxInt(80, 320);
+    const process = async () => {
+      timeout = rndMinMaxInt(80, 320);
+      const countX = 9;
+      const countY = 9;
+      const wWidth = window.innerWidth - 20;
+      const wHeigth = window.innerHeight - 20;
+      const sqSize = Math.min(wWidth, wHeigth);
+
+      let x = 0;
+      let y = 0;
+      const childrens = [...obj.scene.querySelectorAll('div')];
+      for (var i = 0; i < childrens.length; i++) {
+        let item =  childrens[i];
+        if (x > countX - 1) {
+          x=0; y++;
+        }
+        for (let i = 0; i < callbackArray.length; i++) {
+          await callbackArray[i]({x, y, item, wWidth, wHeigth, sqSize});
+        }
+        x++;
+      }
+
+      setTimeout(process, timeout);
+    };
+    process();
+  };
+
+  obj.sizeControll = (arg) => {
+    return new Promise(function(resolve, reject) {
+      if (obj.isSceneReady) {
+        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
+        obj.scene.style.width = `${sqSize}px`;
+        obj.scene.style.height = `${sqSize}px`;
+        item.style.width = `${sqSize / countX}px`;
+        item.style.height = `${sqSize / countY}px`;
+      }
+      return resolve();
+    });
+  };
+  obj.charsMutate = (arg) => {
+    return new Promise(function(resolve, reject) {
+      if (obj.isSceneReady) {
+        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
+        const fqtr = rndMinMaxInt(0, 222);
+        if (d(fqtr, [ 13, 121])) item.style.fontSize = `${rndMinMax(0.9, 3.1)}em`;
+        if (d(fqtr, [ 5, 221])) item.style.fontFamily = rndFromArray(fonts);
+        if (d(fqtr, [ 13, 147])) {
+          item.querySelector('span')
+          .style.transform = `rotate(${rndMinMaxInt(-22, 22)}deg)`;
+        }
+      }
+      return resolve();
+    });
+  };
+
   obj.init = async () => {
     obj.cssCorn = new $CssCorn({id: 'cssCorn', willRender: true});
     obj.addStyles();
     await obj.makeScene();
     await obj.createData();
     obj.render();
-
-    let timeout = rndMinMaxInt(80, 320);
-    const windowSizeWatcher = () => {
-      // console.log('watch');
-      if (obj.isSceneReady) {
-        timeout = rndMinMaxInt(80, 220);
-        const countX = 9;
-        const countY = 9;
-        const wWidth = window.innerWidth - 20;
-        const wHeigth = window.innerHeight - 20;
-        const sqSize = Math.min(wWidth, wHeigth);
-
-        let x = 0;
-        let y = 0;
-        obj.scene.setAttribute('style', `width: ${sqSize}px; height: ${sqSize}px`);
-        [...obj.scene.querySelectorAll('div')].forEach((item) => {
-          if (x>8) {
-            x=0; y++;
-          }
-
-          const borderRight = 'border-right: 3px solid rgba(0,0,100,0.5);';
-          const borderBottom = 'border-bottom: 3px solid rgba(0,0,100,0.5);';
-
-          const fqtr = rndMinMaxInt(0, 222);
-
-          const d = (f, arr) => {
-            for (let i = 0; i < arr.length; i++) {
-              if (f % arr[i] === 0) return true;
-            }
-            return false;
-          };
-
-          let stdStyle = ``;
-          stdStyle += `${x === 2 || x === 5 ? borderRight : ''}`;
-          stdStyle += `${y === 2 || y === 5 ? borderBottom : ''}`;
-          stdStyle += `background: rgba(255, 255, 255, 1);`;
-          stdStyle += `
-          width: ${sqSize / countX}px;
-          height: ${sqSize / countY}px;
-          ${d(fqtr, [13, 121]) ? 'font-size: ' + rndMinMax(0.9, 3.1) + 'em;': ''}
-          ${d(fqtr, [5, 221]) ? 'font-family: ' + rndFromArray(fonts): ''}
-          `;
-          item.setAttribute('style', stdStyle);
-          item.querySelector('span').setAttribute('style', `
-            ${d(fqtr, [13, 147]) ? 'transform: rotate(' + rndMinMaxInt(-22, 22)+'deg);':''}
-          `);
-          x++;
-        });
-      }
-      setTimeout(windowSizeWatcher, timeout);
-    };
-    windowSizeWatcher();
+    obj.loop([
+      obj.sizeControll,
+      obj.charsMutate,
+    ]);
   };
 
   obj.run = () => {
