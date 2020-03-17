@@ -470,6 +470,7 @@ const s = (_) => JSON.stringify(_);
                 const {x, y, item: text = null} = {...params, item};
                 // console.log('SS', {x, y, text}, obj.data[y][x].userInput, obj.data[y][x]);
                 if (text === 'X') {
+                  obj.data[y][x].userInput = null;
                   divMenu.parentNode.removeChild(divMenu);
                   return;
                 }
@@ -550,14 +551,22 @@ const s = (_) => JSON.stringify(_);
     return new Promise((resolve, reject) => {
       if (obj.isSceneReady) {
         const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        if (obj.data[y][x].userInput && item) {
+        if (obj.data[y][x].userInput !== undefined && item) {
           const span = item.querySelector('span');
-          span.innerText = obj.data[y][x].userInput;
-          clss({
-            element: item,
-            remove: 'invisible',
-            add: 'changed',
-          });
+          if (obj.data[y][x].userInput !== null) {
+            span.innerText = obj.data[y][x].userInput;
+            clss({
+              element: item,
+              remove: 'invisible',
+              add: 'changed',
+            });
+          } else if (obj.data[y][x].userInput === null) {
+            clss({
+              element: item,
+              add: 'invisible',
+              remove: 'changed',
+            });
+          }
         }
       }
       return resolve();
