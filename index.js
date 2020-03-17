@@ -89,7 +89,11 @@ const element = (type, _params = {}) => {
   if (params.class) newElement.setAttribute('class', params.class);
   if (params.style) newElement.setAttribute('style', params.style);
   if (params.text) newElement.innerText = params.text;
-  if (params.event) newElement.addEventListener(params.event.type, params.event.handler);
+  if (params.event) {
+    newElement.addEventListener(params.event.type, () => {
+      params.event.handler({element: newElement});
+    });
+  }
   return newElement;
 };
 const clss = (arg) => {
@@ -212,6 +216,7 @@ const s = (_) => JSON.stringify(_);
         margin-bottom: 1em;
         line-height: 1;
         font-size: 18px;
+        font-family: ${rndFromArray(fonts)};
         cursor: pointer;
     `)
         .add('.btn:hover', `
@@ -228,8 +233,22 @@ const s = (_) => JSON.stringify(_);
       left: 20px;
       padding: 1em;
     `)
-        .add('.invisible', `background: rgb(230,230,230)!important; `)
-        .add('.invisible span', ` opacity: 0!important; `);
+
+        .add('.interactive', `cursor: pointer;`)
+        .add('.btnMenuInteractive', `cursor: pointer;`)
+        .add('.menuInteractive', `
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-column-gap: 1em;
+          grid-template-areas: "a1 a2 a3" "a4 a5 a6" "a7 a8 a9" "a10 a11 a12";
+          position: fixed;
+          top: 0px;
+          left: 0px;
+        `)
+        .add('.invisible', `background: rgb(230, 230, 230)!important;`)
+        .add('.changed', `background: rgb(220, 220, 255)!important;`)
+        .add('.invisible span', ` opacity: 0!important; `)
+        .add('.changed span', ` opacity: 1!important; `);
   };
 
   obj.makeScene = async () => {
@@ -425,8 +444,16 @@ const s = (_) => JSON.stringify(_);
         error += `background: rgba(255, 0, 0, 0.30);`;
 
         const newElement = element('div', {
-          class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : 'invisible',
+          class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : 'invisible interactive',
           style: xItem.double ? error : stdStyle,
+          event: {
+            type: 'click',
+            handler(ctx) {
+              const {element: el = null} = ctx;
+              const params = {x, y, element: el};
+              obj.showMenuVariants(params);
+            },
+          },
         });
         const span = element('span', {
           text: str(xItem.value),
@@ -436,6 +463,42 @@ const s = (_) => JSON.stringify(_);
         insert(newElement, obj.scene);
       });
     });
+  };
+
+  obj.showMenuVariants = (params) => {
+    const {x, y, element: el=null} = params;
+    if (obj.data[y][x]) {
+      if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
+        // console.log('ok', obj.data[y][x]);
+        const divMenu = element('div', {
+          'class': 'menuInteractive',
+          'style': '',
+        });
+        const buttonsArray = '123456789X'.split('');
+        buttonsArray.forEach((item) => {
+          const newElement = element('div', {
+            text: item,
+            class: 'btn btnMenuInteractive',
+            style: item === 'X' ? 'grid-area: a11;' : '',
+            event: {
+              type: 'click',
+              handler(ctx) {
+                const {x, y, item: text = null} = {...params, item};
+                // console.log('SS', {x, y, text}, obj.data[y][x].userInput, obj.data[y][x]);
+                if (text === 'X') {
+                  divMenu.parentNode.removeChild(divMenu);
+                  return;
+                }
+                obj.data[y][x].userInput = text;
+                divMenu.parentNode.removeChild(divMenu);
+              },
+            },
+          });
+          insert(newElement, divMenu);
+        });
+        insert(divMenu);
+      }
+    }
   };
 
   obj.loop = (callbackArray) => {
@@ -499,19 +562,37 @@ const s = (_) => JSON.stringify(_);
     });
   };
 
+  obj.userInput = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isSceneReady) {
+        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
+        if (obj.data[y][x].userInput && item) {
+          const span = item.querySelector('span');
+          span.innerText = obj.data[y][x].userInput;
+          clss({
+            element: item,
+            remove: 'invisible',
+            add: 'changed',
+          });
+        }
+      }
+      return resolve();
+    });
+  };
+
   obj.watchWin = (arg) => {
     return new Promise((resolve, reject) => {
       if (obj.isStartGame) {
         let hasInvisible = true;
         for (let dy = 0; dy < obj.data.length; dy++) {
           for (let dx = 0; dx < obj.data[dy].length; dx++) {
-            let element = obj.data[dy][dx];
-            if(!element.isVisible) hasInvisible = false;
+            const element = obj.data[dy][dx];
+            if (!element.isVisible) hasInvisible = false;
             break;
           }
-          if(!hasInvisible) break;
+          if (!hasInvisible) break;
         }
-        console.log('not win');
+        // console.log('not win');
         return resolve();
       } else {
         return resolve();
@@ -530,7 +611,10 @@ const s = (_) => JSON.stringify(_);
     obj.data.forEach((itemY, y) => {
       itemY.forEach((itemX, x) => {
         const fqtr = rndMinMaxInt(0, 222);
-        obj.data[y][x].isVisible = d(fqtr, levels[levelSelector]) ? true : false;
+        if (d(fqtr, levels[levelSelector])) {
+          obj.data[y][x].userInput = null;
+          obj.data[y][x].isVisible = true;
+        }
       });
     });
   };
@@ -618,6 +702,7 @@ const s = (_) => JSON.stringify(_);
       render: [
         obj.sizeControll,
         obj.charsMutate,
+        obj.userInput,
       ],
       data: [
         obj.watchWin,
