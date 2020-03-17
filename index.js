@@ -50,22 +50,6 @@ const range = (...args) => {
 };
 const inRange = (val, a, b) => val >= a && val < b;
 
-const rotateSqMatrixRight = (arr) => {
-  const y = arr.length;
-  const x = arr[0].length;
-  // let [xc, yc] = [0, 0];
-  const res = [];
-  for (let xc = 0; xc < y; xc++) {
-    let row = [];
-    for (let yc = 0; yc < x; yc++) {
-      row.push(arr[yc][xc]);
-    }
-    res.push([...row]);
-    row = [];
-  }
-  return res;
-};
-
 const str = (_) => String(_);
 
 const d = (f, arr) => {
