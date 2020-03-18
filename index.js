@@ -12,6 +12,33 @@ const makeMatrix = async (width, height, fn) => {
   }
   return result;
 };
+const str = (_) => String(_);
+const int = (_) => parseInt(_);
+const getColumn = (matrix, x) => [...matrix].map((item) => item[x]);
+const getStripe = (matrix, y) => [...matrix][y];
+const getMatrixArea = (matrix, startX, startY, width, height) => [...matrix]
+    .map((itemY, y) =>
+      y >= startY && y < startY + height ?
+        itemY
+            .map((itemX, x) =>
+          x >= startX && x < startX + width ?
+            itemX : false)
+            .filter((itm)=>itm!==false) : false)
+    .filter((itm)=>itm!==false);
+const setMatrixElement = (_matrix, x, y, newVal) => {
+  const matrix = [..._matrix];
+  matrix[y][x] = newVal;
+  return matrix;
+};
+const setMatrixArea = (matrix, startX, startY, width, height, fn) => [...matrix]
+    .map((itemY, y) =>
+        y >= startY && y < startY + height ?
+          itemY
+              .map((itemX, x) =>
+            x >= startX && x < startX + width ?
+              fn(x, y, itemX) : itemX)
+              : itemY);
+
 const range = (...args) => {
   let start = 0;
   let end = 0;
@@ -50,8 +77,6 @@ const range = (...args) => {
 };
 const inRange = (val, a, b) => val >= a && val < b;
 
-const str = (_) => String(_);
-
 const d = (f, arr) => {
   for (let i = 0; i < arr.length; i++) {
     if (f % arr[i] === 0) return true;
@@ -82,6 +107,7 @@ const element = (type, _params = {}) => {
 };
 const clss = (arg) => {
   if (!arg && !arg.element) return false;
+  if (arg.has) return arg.element.classList.contains(arg.has);
   if (arg.add) {
     if (!arg.element.classList.contains(arg.add)) {
       arg.element.classList.add(arg.add);
@@ -174,6 +200,7 @@ const s = (_) => JSON.stringify(_);
         transition: width 0.15s 0s ease-out, height 0.15s 0s ease-out, font-size 0.25s 0s ease-out;
         font-weight 0.25s 0s ease-out;
     `)
+        .add('.scene div.error:not(.changed)', `background: rgb(255, 220, 220)!important;`)
         .add('.scene div span', `
         transition: transform 0.25s 0s ease-out;
     `)
@@ -220,17 +247,32 @@ const s = (_) => JSON.stringify(_);
 
         .add('.interactive', `cursor: pointer;`)
         .add('.btnMenuInteractive', `cursor: pointer;`)
+        .add('.menuInteractiveWrapper', `
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          align-content: center;
+          position: fixed;
+          background-color: rgba(0,0,0,0.5);
+          width: 100%;
+          height: 100%;
+          top: 0px;
+          left: 0px;
+        `)
         .add('.menuInteractive', `
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
           grid-column-gap: 1em;
           grid-template-areas: "a1 a2 a3" "a4 a5 a6" "a7 a8 a9" "a10 a11 a12";
-          position: fixed;
-          top: 0px;
-          left: 0px;
+          background-color: white;
+          padding: 1em;
+          box-sizing: border-box;
+          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
         `)
         .add('.invisible', `background: rgb(230, 230, 230)!important;`)
         .add('.changed', `background: rgb(220, 220, 255)!important;`)
+        .add('.changed.error', `background: rgb(255, 128, 128)!important;`)
         .add('.invisible span', ` opacity: 0!important; `)
         .add('.changed span', ` opacity: 1!important; `);
   };
@@ -260,32 +302,6 @@ const s = (_) => JSON.stringify(_);
   };
 
   obj.createData = async () => {
-    const getColumn = (matrix, x) => [...matrix].map((item) => item[x]);
-    const getStripe = (matrix, y) => [...matrix][y];
-    const getMatrixArea = (matrix, startX, startY, width, height) => [...matrix]
-        .map((itemY, y) =>
-          y >= startY && y < startY + height ?
-            itemY
-                .map((itemX, x) =>
-              x >= startX && x < startX + width ?
-                itemX : false)
-                .filter((itm)=>itm!==false) : false)
-        .filter((itm)=>itm!==false);
-    const setMatrixElement = (_matrix, x, y, newVal) => {
-      const matrix = [..._matrix];
-      matrix[y][x] = newVal;
-      return matrix;
-    };
-    const setMatrixArea = (matrix, startX, startY, width, height, fn) => [...matrix]
-        .map((itemY, y) =>
-            y >= startY && y < startY + height ?
-              itemY
-                  .map((itemX, x) =>
-                x >= startX && x < startX + width ?
-                  fn(x, y, itemX) : itemX)
-                  : itemY);
-
-
     const asset = range(1, 9);
     const width = 9;
     const height = width;
@@ -309,20 +325,13 @@ const s = (_) => JSON.stringify(_);
     const generateMatrix = async (_data) => {
       return new Promise(async (resolve, reject) => {
         let data = [..._data];
-        // const isStop = false;
-        // const stopX = 7;
-        // const stopY = 7;
         let [x, y] = [0, 0];
 
         const sectorList = [0, 3, 6];
         let regressionCount = 0;
         let errr = -1;
         for (y = 0; y < data.length; y++) {
-          // if (y > stopY) break;
-          // if (isStop) break;
           for (x = 0; x < data[y].length; x++) {
-            // if (x > stopX) break;
-            // if (x > stopX && y > stopY) isStop=true;
             const column = getColumn(data, x);
             const stripe = getStripe(data, y);
             let areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
@@ -454,6 +463,10 @@ const s = (_) => JSON.stringify(_);
     if (obj.data[y][x]) {
       if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
         // console.log('ok', obj.data[y][x]);
+        const divMenuWrapper = element('div', {
+          'class': 'menuInteractiveWrapper',
+          'style': '',
+        });
         const divMenu = element('div', {
           'class': 'menuInteractive',
           'style': '',
@@ -471,17 +484,18 @@ const s = (_) => JSON.stringify(_);
                 // console.log('SS', {x, y, text}, obj.data[y][x].userInput, obj.data[y][x]);
                 if (text === 'X') {
                   obj.data[y][x].userInput = null;
-                  divMenu.parentNode.removeChild(divMenu);
+                  divMenuWrapper.parentNode.removeChild(divMenuWrapper);
                   return;
                 }
                 obj.data[y][x].userInput = text;
-                divMenu.parentNode.removeChild(divMenu);
+                divMenuWrapper.parentNode.removeChild(divMenuWrapper);
               },
             },
           });
           insert(newElement, divMenu);
         });
-        insert(divMenu);
+        insert(divMenu, divMenuWrapper);
+        insert(divMenuWrapper);
       }
     }
   };
@@ -544,6 +558,99 @@ const s = (_) => JSON.stringify(_);
         }
       }
       return resolve();
+    });
+  };
+
+  obj.processErrors = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isSceneReady) {
+        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
+        if (obj.data[y][x].isError) {
+          clss({
+            element: item,
+            add: 'error',
+          });
+        } else {
+          clss({
+            element: item,
+            remove: 'error',
+          });
+        }
+        return resolve();
+      }
+      return resolve();
+    });
+  };
+
+  obj.doubleSearching = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isStartGame) {
+        console.log(obj.data,'!!!');
+        for (let y = 0; y < obj.data.length; y++) {
+          for (let x = 0; x < obj.data[y].length; x++) {
+            const element = obj.data[y][x];
+            console.log(element);
+            if (element.userInput) {
+              const val = element.userInput;
+              console.log(val, '!');
+              // const sectorList = [0, 3, 6];
+              // const width = 3;
+              // const height = width;
+              // const areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
+              // const areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
+              const column = getColumn(obj.data, x);
+              const stripe = getStripe(obj.data, y);
+              // const area = getMatrixArea(obj.data, areaStartX, areaStartY, width, height);
+
+              const columnIndex = column.findIndex((item, i) => {
+                if (y===i) return false;
+                if (item.userInput !== undefined) {
+                  if (item.userInput !== null) {
+                    if (str(item.userInput) === str(val.userInput)) return true;
+                  }
+                } else {
+                  if (str(item.value) === str(val.userInput)) return true;
+                }
+                return false;
+              });
+
+              // const stripeIndex = stripe.findIndex((item, i) => {
+              //   if (x===i) return false;
+              //   if (item.userInput !== undefined) {
+              //     if (item.userInput !== null) {
+              //       if (str(item.userInput) === str(val.userInput)) return true;
+              //     }
+              //   } else {
+              //     if (str(item.value) === str(val.userInput)) return true;
+              //   }
+              //   return false;
+              // });
+              // const areaIndexs = area.map((itemY, yy) => {
+              //   if (yy + y === y) return false;
+              //   const indexes = itemY.map((itemX, xx) => {
+              //     if (xx + x === x) return false;
+              //     if (itemX === val) return [yy + y, xx + x];
+              //     return false;
+              //   });
+              //   return indexes;
+              // });
+              // if (columnIndex !== -1) {
+              //   obj.data[columnIndex][x].isError = true;
+              //   element.isError = true;
+              // }
+              if (stripeIndex !== -1) {
+                obj.data[y][stripeIndex].isError = true;
+                element.isError = true;
+              }
+              // console.log('>>', areaIndexs);
+              resolve();
+            }
+            return resolve();
+          }
+        }
+      } else {
+        return resolve();
+      }
     });
   };
 
@@ -696,9 +803,11 @@ const s = (_) => JSON.stringify(_);
         obj.sizeControll,
         obj.charsMutate,
         obj.userInput,
+        obj.processErrors,
       ],
       data: [
         obj.watchWin,
+        obj.doubleSearching,
       ],
     });
   };
