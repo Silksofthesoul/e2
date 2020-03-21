@@ -394,8 +394,12 @@ const s = (_) => JSON.stringify(_);
     }
     if (data.length === 0) window.location.reload();
 
-    data = [...data].map((yItem) => {
-      return yItem.map((xItem) => ({value: xItem}));
+    data = [...data].map((yItem, yyy) => {
+      return yItem.map((xItem, xxx) => ({
+        value: xItem,
+        x: xxx,
+        y: yyy,
+      }));
     });
 
     for (let y = 0; y < data.length; y++) {
@@ -585,72 +589,51 @@ const s = (_) => JSON.stringify(_);
   obj.doubleSearching = (arg) => {
     return new Promise((resolve, reject) => {
       if (obj.isStartGame) {
-        console.log(obj.data,'!!!');
-        for (let y = 0; y < obj.data.length; y++) {
-          for (let x = 0; x < obj.data[y].length; x++) {
-            const element = obj.data[y][x];
-            console.log(element);
-            if (element.userInput) {
-              const val = element.userInput;
-              console.log(val, '!');
-              // const sectorList = [0, 3, 6];
-              // const width = 3;
-              // const height = width;
-              // const areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
-              // const areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
-              const column = getColumn(obj.data, x);
-              const stripe = getStripe(obj.data, y);
-              // const area = getMatrixArea(obj.data, areaStartX, areaStartY, width, height);
+        const data = [...obj.data];
+        let double = [];
+        let column = [];
+        const columnWithoutError = [];
+        for (let y = 0; y < data.length; y++) {
+          for (let x = 0; x < data[y].length; x++) {
+            const val = data[y][x].userInput;
+            // if (!val) {
+            //   obj.data[y][x].isError = false;
+            //   continue;
+            // }
 
-              const columnIndex = column.findIndex((item, i) => {
-                if (y===i) return false;
-                if (item.userInput !== undefined) {
-                  if (item.userInput !== null) {
-                    if (str(item.userInput) === str(val.userInput)) return true;
-                  }
-                } else {
-                  if (str(item.value) === str(val.userInput)) return true;
+            column = getColumn(data, x);
+
+            double = column.map((item, i) => {
+              if (i === y) return false;
+              if (!val) return false;
+              if (item.userInput !== undefined) {
+                if (str(item.userInput) === str(val)) return item;
+              } else if (item.userInput === undefined) {
+                if (str(item.value) === val) {
+                  return item;
                 }
-                return false;
-              });
-
-              // const stripeIndex = stripe.findIndex((item, i) => {
-              //   if (x===i) return false;
-              //   if (item.userInput !== undefined) {
-              //     if (item.userInput !== null) {
-              //       if (str(item.userInput) === str(val.userInput)) return true;
-              //     }
-              //   } else {
-              //     if (str(item.value) === str(val.userInput)) return true;
-              //   }
-              //   return false;
-              // });
-              // const areaIndexs = area.map((itemY, yy) => {
-              //   if (yy + y === y) return false;
-              //   const indexes = itemY.map((itemX, xx) => {
-              //     if (xx + x === x) return false;
-              //     if (itemX === val) return [yy + y, xx + x];
-              //     return false;
-              //   });
-              //   return indexes;
-              // });
-              // if (columnIndex !== -1) {
-              //   obj.data[columnIndex][x].isError = true;
-              //   element.isError = true;
-              // }
-              if (stripeIndex !== -1) {
-                obj.data[y][stripeIndex].isError = true;
-                element.isError = true;
               }
-              // console.log('>>', areaIndexs);
-              resolve();
+              return false;
+            }).filter((itm) => !!itm);
+
+            if (double.length > 0) {
+              double.forEach((item, i) => {
+                obj.data[item.y][item.x].isError = true;
+              });
+            } else {
+              columnWithoutError.push(x);
             }
-            return resolve();
           }
         }
-      } else {
-        return resolve();
+        columnWithoutError.forEach((item, i) => {
+          obj.data.forEach((yItem, y) => {
+            yItem.forEach((xItem, x) => {
+              if (x===item) obj.data[y][x].isError = false;
+            });
+          });
+        });
       }
+      resolve();
     });
   };
 
