@@ -274,6 +274,19 @@ const s = (_) => JSON.stringify(_);
         .add('.changed', `background: rgb(220, 220, 255)!important;`)
         .add('.changed.error', `background: rgb(255, 128, 128)!important;`)
         .add('.invisible span', ` opacity: 0!important; `)
+        .add('.levelSelector', `
+        z-index: 1;
+        background: rgba(0,0,0,0.8);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-content: center;
+        align-items: center;`)
         .add('.changed span', ` opacity: 1!important; `);
   };
 
@@ -406,10 +419,8 @@ const s = (_) => JSON.stringify(_);
       for (let x = 0; x < data[y].length; x++) {
         const column = [...getColumn(data, x)];
         const string = [...getStripe(data, y)];
-        // console.log(x,y, column, string);
         column.splice(y, 1);
         string.splice(x, 1);
-        // console.log(data[y][x].value, column, string, '!@#');
         fY = column.find((itm) => itm.value === data[y][x].value);
         fX = string.find((itm) => itm.value === data[y][x].value);
         if (fY || fX) data[y][x].double = true;
@@ -803,10 +814,52 @@ const s = (_) => JSON.stringify(_);
   };
 
   obj.makeStartScreen = () => {
+    const startGameHandler = (level = 'ease') => {
+      console.log('click');
+      obj.makeGame(level);
+
+      clss({element: obj.scene, remove: 'hidden'});
+      clss({element: obj.levelSelector, add: 'hidden'});
+      clss({element: obj.startScreen, add: 'hidden'});
+      clss({element: obj.navigationPanel, remove: 'hidden'});
+      obj.render();
+      obj.isSceneReady = true;
+      obj.isStartGame = true;
+    };
     obj.startScreen = element('div', {
       id: 'startScreen',
       class: 'startScreen hidden',
     });
+    obj.levelSelector = element('div', {
+      id: 'levelSelector',
+      class: 'levelSelector hidden',
+    });
+
+    obj.levelSelectorEase = element('div', {
+      id: 'btnEase',
+      class: 'btn',
+      text: 'Easy',
+      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
+        // startGameHandler('ease');
+      },
+    });
+    obj.levelSelectorMedium = element('div', {
+      id: 'btnMedium',
+      class: 'btn',
+      text: 'Medium',
+      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
+        // startGameHandler('medium');
+      },
+    });
+    obj.levelSelectorHard = element('div', {
+      id: 'btnHard',
+      class: 'btn',
+      text: 'Hard',
+      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
+        // startGameHandler('hard');
+      },
+    });
+
     obj.btnShowSudoku = element('div', {
       id: 'btnShowSudoku',
       class: 'btnShowSudoku btn',
@@ -830,13 +883,7 @@ const s = (_) => JSON.stringify(_);
       event: {
         type: 'click',
         handler() {
-          obj.makeGame('ease');
-          clss({element: obj.scene, remove: 'hidden'});
-          clss({element: obj.startScreen, add: 'hidden'});
-          clss({element: obj.navigationPanel, remove: 'hidden'});
-          obj.render();
-          obj.isSceneReady = true;
-          obj.isStartGame = true;
+          clss({element: obj.levelSelector, remove: 'hidden'});
         },
       },
     });
@@ -845,6 +892,12 @@ const s = (_) => JSON.stringify(_);
     insert(obj.btnShowSudoku, obj.startScreen);
     insert(obj.btnStartGame, obj.startScreen);
     insert(obj.startScreen);
+
+    insert(obj.levelSelectorEase, obj.levelSelector);
+    insert(obj.levelSelectorMedium, obj.levelSelector);
+    insert(obj.levelSelectorHard, obj.levelSelector);
+    insert(obj.levelSelector);
+
     clss({element: obj.loading, add: 'hidden'});
     clss({element: obj.startScreen, remove: 'hidden'});
   };
