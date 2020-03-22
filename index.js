@@ -586,25 +586,18 @@ const s = (_) => JSON.stringify(_);
     });
   };
 
-  obj.doubleSearching = (arg) => {
+  obj.columnDoubleSearching = (arg) => {
     return new Promise((resolve, reject) => {
       if (obj.isStartGame) {
         const data = [...obj.data];
         let double = [];
         let column = [];
-        const columnWithoutError = [];
+        const columnWithError = [];
         for (let y = 0; y < data.length; y++) {
           for (let x = 0; x < data[y].length; x++) {
             const val = data[y][x].userInput;
-            // if (!val) {
-            //   obj.data[y][x].isError = false;
-            //   continue;
-            // }
-
             column = getColumn(data, x);
-
             double = column.map((item, i) => {
-              if (i === y) return false;
               if (!val) return false;
               if (item.userInput !== undefined) {
                 if (str(item.userInput) === str(val)) return item;
@@ -617,19 +610,126 @@ const s = (_) => JSON.stringify(_);
             }).filter((itm) => !!itm);
 
             if (double.length > 0) {
-              double.forEach((item, i) => {
-                obj.data[item.y][item.x].isError = true;
-              });
-            } else {
-              columnWithoutError.push(x);
+              if (double.length === 1) {
+                if (double[0].value === double[0].userInput) {
+                  obj.data[item.y][item.x].isError = false;
+                }
+              } else {
+                double.forEach((item, i) => {
+                  obj.data[item.y][item.x].isError = true;
+                });
+                columnWithError.push(obj.data[y][x]);
+              }
             }
           }
         }
-        columnWithoutError.forEach((item, i) => {
-          obj.data.forEach((yItem, y) => {
-            yItem.forEach((xItem, x) => {
-              if (x===item) obj.data[y][x].isError = false;
-            });
+        obj.data.forEach((itemY, y) => {
+          obj.data.forEach((itemX, x) => {
+            const f = columnWithError.find((item) => item.x === x && item.y === y);
+            if (!f) obj.data[y][x].isError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
+          });
+        });
+      }
+      resolve();
+    });
+  };
+  obj.stripeDoubleSearching = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isStartGame) {
+        const data = [...obj.data];
+        let double = [];
+        let stripe = [];
+        const stripeWithError = [];
+        for (let y = 0; y < data.length; y++) {
+          for (let x = 0; x < data[y].length; x++) {
+            const val = data[y][x].userInput;
+            stripe = getStripe(data, y);
+            double = stripe.map((item, i) => {
+              if (!val) return false;
+              if (item.userInput !== undefined) {
+                if (str(item.userInput) === str(val)) return item;
+              } else if (item.userInput === undefined) {
+                if (str(item.value) === val) {
+                  return item;
+                }
+              }
+              return false;
+            }).filter((itm) => !!itm);
+
+            if (double.length > 0) {
+              if (double.length === 1) {
+                if (double[0].value === double[0].userInput) {
+                  obj.data[item.y][item.x].isError = false;
+                }
+              } else {
+                double.forEach((item, i) => {
+                  obj.data[item.y][item.x].isError = true;
+                });
+                stripeWithError.push(obj.data[y][x]);
+              }
+            }
+          }
+        }
+        obj.data.forEach((itemY, y) => {
+          obj.data.forEach((itemX, x) => {
+            const f = stripeWithError.find((item) => item.x === x && item.y === y);
+            if (!f) obj.data[y][x].isError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
+          });
+        });
+      }
+      resolve();
+    });
+  };
+
+  obj.areaDoubleSearching = (arg) => {
+    return new Promise((resolve, reject) => {
+      if (obj.isStartGame) {
+        const data = [...obj.data];
+        let double = [];
+        let area = [];
+        const areaWithError = [];
+        for (let y = 0; y < data.length; y++) {
+          for (let x = 0; x < data[y].length; x++) {
+            const val = data[y][x].userInput;
+            const sectorList = [0, 3, 6];
+            const width = 3;
+            const height = width;
+            const areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
+            const areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
+            area = getMatrixArea(obj.data, areaStartX, areaStartY, width, height).flat();
+            double = area.map((item, i) => {
+              if (!val) return false;
+              if (item.userInput !== undefined) {
+                if (str(item.userInput) === str(val)) return item;
+              } else if (item.userInput === undefined) {
+                if (str(item.value) === val) {
+                  return item;
+                }
+              }
+              return false;
+            }).filter((itm) => !!itm);
+            //
+            if (double.length > 0) {
+              if (double.length === 1) {
+                if (double[0].value === double[0].userInput) {
+                  obj.data[item.y][item.x].isError = false;
+                }
+              } else {
+                double.forEach((item, i) => {
+                  obj.data[item.y][item.x].isError = true;
+                });
+                areaWithError.push(obj.data[y][x]);
+              }
+            }
+          }
+        }
+        obj.data.forEach((itemY, y) => {
+          obj.data.forEach((itemX, x) => {
+            const f = areaWithError.find((item) => item.x === x && item.y === y);
+            if (!f) obj.data[y][x].isError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
           });
         });
       }
@@ -790,7 +890,9 @@ const s = (_) => JSON.stringify(_);
       ],
       data: [
         obj.watchWin,
-        obj.doubleSearching,
+        obj.columnDoubleSearching,
+        obj.stripeDoubleSearching,
+        obj.areaDoubleSearching,
       ],
     });
   };
