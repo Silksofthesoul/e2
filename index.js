@@ -477,7 +477,6 @@ const s = (_) => JSON.stringify(_);
     const {x, y, element: el=null} = params;
     if (obj.data[y][x]) {
       if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
-        // console.log('ok', obj.data[y][x]);
         const divMenuWrapper = element('div', {
           'class': 'menuInteractiveWrapper',
           'style': '',
@@ -580,7 +579,7 @@ const s = (_) => JSON.stringify(_);
     return new Promise((resolve, reject) => {
       if (obj.isSceneReady) {
         const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        if (obj.data[y][x].isError) {
+        if (obj.data[y][x].isColumnError || obj.data[y][x].isStripeError || obj.data[y][x].isAreaError) {
           clss({
             element: item,
             add: 'error',
@@ -623,11 +622,11 @@ const s = (_) => JSON.stringify(_);
             if (double.length > 0) {
               if (double.length === 1) {
                 if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isError = false;
+                  obj.data[item.y][item.x].isColumnError = false;
                 }
               } else {
                 double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isError = true;
+                  obj.data[item.y][item.x].isColumnError = true;
                 });
                 columnWithError.push(obj.data[y][x]);
               }
@@ -637,8 +636,8 @@ const s = (_) => JSON.stringify(_);
         obj.data.forEach((itemY, y) => {
           obj.data.forEach((itemX, x) => {
             const f = columnWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
+            if (!f) obj.data[y][x].isColumnError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isColumnError = false;
           });
         });
       }
@@ -671,11 +670,11 @@ const s = (_) => JSON.stringify(_);
             if (double.length > 0) {
               if (double.length === 1) {
                 if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isError = false;
+                  obj.data[item.y][item.x].isStripeError = false;
                 }
               } else {
                 double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isError = true;
+                  obj.data[item.y][item.x].isStripeError = true;
                 });
                 stripeWithError.push(obj.data[y][x]);
               }
@@ -685,8 +684,8 @@ const s = (_) => JSON.stringify(_);
         obj.data.forEach((itemY, y) => {
           obj.data.forEach((itemX, x) => {
             const f = stripeWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
+            if (!f) obj.data[y][x].isStripeError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isStripeError = false;
           });
         });
       }
@@ -725,11 +724,11 @@ const s = (_) => JSON.stringify(_);
             if (double.length > 0) {
               if (double.length === 1) {
                 if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isError = false;
+                  obj.data[item.y][item.x].isAreaError = false;
                 }
               } else {
                 double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isError = true;
+                  obj.data[item.y][item.x].isAreaError = true;
                 });
                 areaWithError.push(obj.data[y][x]);
               }
@@ -739,8 +738,8 @@ const s = (_) => JSON.stringify(_);
         obj.data.forEach((itemY, y) => {
           obj.data.forEach((itemX, x) => {
             const f = areaWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isError = false;
+            if (!f) obj.data[y][x].isAreaError = false;
+            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isAreaError = false;
           });
         });
       }
@@ -797,6 +796,7 @@ const s = (_) => JSON.stringify(_);
   obj.makeGame = (_levelSelector='ease') => {
     const levels = {
       'ease': [13, 23],
+      'medium': [4, 8, 12, 16, 23],
       'hard': [2, 3, 5],
     };
     let levelSelector = null;
@@ -815,7 +815,6 @@ const s = (_) => JSON.stringify(_);
 
   obj.makeStartScreen = () => {
     const startGameHandler = (level = 'ease') => {
-      console.log('click');
       obj.makeGame(level);
 
       clss({element: obj.scene, remove: 'hidden'});
@@ -839,24 +838,33 @@ const s = (_) => JSON.stringify(_);
       id: 'btnEase',
       class: 'btn',
       text: 'Easy',
-      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
-        // startGameHandler('ease');
+      event: {
+        type: 'click',
+        handler() {
+          startGameHandler('ease');
+        },
       },
     });
     obj.levelSelectorMedium = element('div', {
       id: 'btnMedium',
       class: 'btn',
       text: 'Medium',
-      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
-        // startGameHandler('medium');
+      event: {
+        type: 'click',
+        handler() {
+          startGameHandler('medium');
+        },
       },
     });
     obj.levelSelectorHard = element('div', {
       id: 'btnHard',
       class: 'btn',
       text: 'Hard',
-      handler() { console.log('@@@@@@@@@@@@@@@@@@@@@@@@@');
-        // startGameHandler('hard');
+      event: {
+        type: 'click',
+        handler() {
+          startGameHandler('hard');
+        },
       },
     });
 
