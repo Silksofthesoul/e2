@@ -121,6 +121,23 @@ const clss = (arg) => {
 };
 
 const s = (_) => JSON.stringify(_);
+const convertMS = ( milliseconds ) => {
+  // from https://gist.github.com/Erichain/6d2c2bf16fe01edfcffa
+  let day; let hour; let minute; let seconds;
+  seconds = Math.floor(milliseconds / 1000);
+  minute = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  hour = Math.floor(minute / 60);
+  minute = minute % 60;
+  day = Math.floor(hour / 24);
+  hour = hour % 24;
+  return {
+    day,
+    hour,
+    minute,
+    seconds,
+  };
+};
 
 (()=>{
   const obj = {
@@ -273,7 +290,39 @@ const s = (_) => JSON.stringify(_);
         .add('.invisible', `background: rgb(230, 230, 230)!important;`)
         .add('.changed', `background: rgb(220, 220, 255)!important;`)
         .add('.changed.error', `background: rgb(255, 128, 128)!important;`)
-        .add('.invisible span', ` opacity: 0!important; `)
+        .add('.invisible span', `opacity: 0!important; `)
+        .add('.winnerScreen', `
+          z-index: 1;
+          background: rgba(0,0,0,0.8);
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+        `)
+        .add('.winnerInfo1', `
+        font-family: ${rndFromArray(fonts)};
+        color: white;
+        font-size: 2em;
+        padding-bottom: 0.25em;
+        `)
+        .add('.winnerInfo2', `
+        font-family: ${rndFromArray(fonts)};
+        color: white;
+        font-size: 2em;
+        padding-bottom: 0.25em;
+        `)
+        .add('.timeInfo', `
+        font-family: ${rndFromArray(fonts)};
+        color: white;
+        font-size: 2em;
+        padding-bottom: 1.25em;
+        `)
         .add('.levelSelector', `
         z-index: 1;
         background: rgba(0,0,0,0.8);
@@ -773,19 +822,84 @@ const s = (_) => JSON.stringify(_);
     });
   };
 
+  obj.showWinScreen = () => {
+    const endTime = new Date().getTime();
+    const gameTime = endTime - obj.startTime;
+    const {
+      hour,
+      minute,
+      seconds,
+    } = convertMS(gameTime);
+    const $hour = s(hour).length === 1 ? '0' + hour:hour;
+    const $minute = s(minute).length === 1 ? '0' + minute:minute;
+    const $seconds = s(seconds).length === 1 ? '0' + seconds:seconds;
+    const t = `${$hour}:${$minute}:${$seconds}`;
+
+    obj.winnerScreen = element('div', {
+      id: 'winnerScreen',
+      class: 'winnerScreen',
+    });
+
+    obj.winnerInfo1 = element('div', {
+      id: 'winnerInfo1',
+      class: 'winnerInfo1',
+      text: `Congratulations!`,
+    });
+
+    obj.winnerInfo2 = element('div', {
+      id: 'winnerInfo2',
+      class: 'winnerInfo2',
+      text: `You Win!`,
+    });
+
+    obj.timeInfo = element('div', {
+      id: 'timeInfo',
+      class: 'timeInfo',
+      text: `Your Time: ${t}`,
+    });
+
+    obj.playAgain = element('div', {
+      id: 'playAgain',
+      class: 'btn playAgain',
+      text: `Play Again!`,
+      event: {
+        type: 'click',
+        handler() {
+          window.location.reload();
+        },
+      },
+    });
+
+    insert(obj.winnerInfo1, obj.winnerScreen);
+    insert(obj.winnerInfo2, obj.winnerScreen);
+    insert(obj.timeInfo, obj.winnerScreen);
+
+    insert(obj.playAgain, obj.winnerScreen);
+    insert(obj.winnerScreen);
+  };
+
   obj.watchWin = (arg) => {
     return new Promise((resolve, reject) => {
-      if (obj.isStartGame) {
-        let hasInvisible = true;
+      if (obj.isStartGame && !obj.isWin) {
+        let isWin = true;
         for (let dy = 0; dy < obj.data.length; dy++) {
           for (let dx = 0; dx < obj.data[dy].length; dx++) {
             const element = obj.data[dy][dx];
-            if (!element.isVisible) hasInvisible = false;
+            if (element.userInput!== undefined) {
+              if (!element.userInput || (element.isStripeError || element.isColumnError || element.isAreaError)) {
+                isWin = false;
+                break;
+              }
+            }
+          }
+          if (!isWin) {
             break;
           }
-          if (!hasInvisible) break;
         }
-        // console.log('not win');
+        if (isWin) {
+          obj.isWin = true;
+          obj.showWinScreen();
+        }
         return resolve();
       } else {
         return resolve();
@@ -794,6 +908,7 @@ const s = (_) => JSON.stringify(_);
   };
 
   obj.makeGame = (_levelSelector='ease') => {
+    obj.startTime = new Date().getTime();
     const levels = {
       'ease': [13, 23],
       'medium': [4, 8, 12, 16, 23],
