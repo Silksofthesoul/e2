@@ -158,11 +158,8 @@ const m = {
   gen(start, end) {
     const library = 'qwertyuiopasdfghjklzxcvbnm_';
     const prefix = rndFromArray(library);
-    return start + prefix + atob(end)
-        .split('')
-        .map((item, i) => i%2==0 ? item.charCodeAt() : false)
-        .filter((item) => !!item)
-        .join('');
+    const c = range(3).map((item, i) => i % 3 === 0 ? rndMinMaxInt(0, 9) : rndFromArray(library)).join('');
+    return start + prefix + c;
   },
   get(start, end, cut = false) {
     const res = m.gen(start, end);
