@@ -887,15 +887,13 @@ const convertMS = ( milliseconds ) => {
           for (let dx = 0; dx < obj.data[dy].length; dx++) {
             const element = obj.data[dy][dx];
             if (element.userInput!== undefined) {
-              if (!element.userInput || (element.isStripeError || element.isColumnError || element.isAreaError)) {
+              if ((element.isStripeError || element.isColumnError || element.isAreaError) || !element.userInput) {
                 isWin = false;
                 break;
               }
             }
           }
-          if (!isWin) {
-            break;
-          }
+          if (!isWin) break;
         }
         if (isWin) {
           obj.isWin = true;
@@ -1066,10 +1064,10 @@ const convertMS = ( milliseconds ) => {
         obj.processErrors,
       ],
       data: [
-        obj.watchWin,
         obj.columnDoubleSearching,
         obj.stripeDoubleSearching,
         obj.areaDoubleSearching,
+        obj.watchWin,
       ],
     });
   };
