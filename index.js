@@ -543,7 +543,7 @@ m.gen = __cache(m.gen, hash);
           },
         });
         const span = element('span', {
-          text: str(xItem.value),
+          text: xItem.isVisible === undefined || xItem.isVisible === false ? str(xItem.value): ' ',
           style: `transform: rotate(${rndMinMaxInt(-22, 22)}deg);`,
         });
         insert(span, newElement);
