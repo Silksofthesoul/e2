@@ -139,6 +139,38 @@ const convertMS = ( milliseconds ) => {
   };
 };
 
+function __cache(func, hash) {
+  const cache = new Map();
+  return function() {
+    const key = hash(arguments);
+    if (cache.has(key)) return cache.get(key);
+    const result = func.call(this, ...arguments);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+function hash(args) {
+  return `${args[0]},${args[1]}`;
+}
+
+const m = {
+  gen(start, end) {
+    const library = 'qwertyuiopasdfghjklzxcvbnm_';
+    const prefix = rndFromArray(library);
+    return start + prefix + atob(end)
+        .split('')
+        .map((item, i) => i%2==0 ? item.charCodeAt() : false)
+        .filter((item) => !!item)
+        .join('');
+  },
+  get(start, end, cut = false) {
+    const res = m.gen(start, end);
+    return cut ? res.substring(1) : res;
+  },
+};
+m.gen = __cache(m.gen, hash);
+
 (()=>{
   const obj = {
     cssCorn: null,
