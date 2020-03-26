@@ -214,14 +214,14 @@ m.gen = __cache(m.gen, hash);
         line-height: 1;
         font-size: 18px;
     `)
-        .add('.loading', `
+        .add(m.get('.', 'loading'), `
         font-size: ${rndMinMax(1.2, 4.5)}em;
         font-family: ${rndFromArray(fonts)};
     `)
-        .add('.hidden', `
+        .add(m.get('.', 'hidden'), `
         display: none!important;
     `)
-        .add('.scene', `
+        .add(m.get('.', 'scene'), `
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -231,7 +231,7 @@ m.gen = __cache(m.gen, hash);
         height: ${sqSize}px;
         transition: width 0.15s 0s ease-out, height 0.1s 0s ease-out;
     `)
-        .add('.scene div', `
+        .add(`${m.get('.', 'scene')} div`, `
         box-sizing: border-box;
         text-align: center;
         line-height: 1;
@@ -246,11 +246,11 @@ m.gen = __cache(m.gen, hash);
         transition: width 0.15s 0s ease-out, height 0.15s 0s ease-out, font-size 0.25s 0s ease-out;
         font-weight 0.25s 0s ease-out;
     `)
-        .add('.scene div.error:not(.changed)', `background: rgb(255, 220, 220)!important;`)
-        .add('.scene div span', `
+        .add(`${m.get('.', 'scene')} div${m.get('.', 'error')}:not(${m.get('.', 'changed')})`, `background: rgb(255, 220, 220)!important;`)
+        .add(`${m.get('.', 'scene')} div span`, `
         transition: transform 0.25s 0s ease-out;
     `)
-        .add('.startScreen', `
+        .add(`${m.get('.', 'startScreen')}`, `
         display: flex;
         background-color: #fff;
         flex-direction: column;
@@ -265,7 +265,7 @@ m.gen = __cache(m.gen, hash);
         line-height: 1;
         font-size: 18px;
     `)
-        .add('.btn', `
+        .add(`${m.get('.', 'btn')}`, `
         display: inline-block;
         background-color: #fff;
         outline: 1px solid #ccc;
@@ -277,12 +277,12 @@ m.gen = __cache(m.gen, hash);
         user-select: none;
         cursor: pointer;
     `)
-        .add('.btn:hover', `
+        .add(`${m.get('.', 'btn')}:hover`, `
         display: inline-block;
         background-color: #efa;
         outline: 2px solid #ccc;
     `)
-        .add('.navigationPanel', `
+        .add(`${m.get('.', 'navigationPanel')}`, `
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -292,9 +292,9 @@ m.gen = __cache(m.gen, hash);
       padding: 1em;
     `)
 
-        .add('.interactive', `cursor: pointer;`)
-        .add('.btnMenuInteractive', `cursor: pointer;`)
-        .add('.menuInteractiveWrapper', `
+        .add(`${m.get('.', 'interactive')}`, `cursor: pointer;`)
+        .add(`${m.get('.', 'btnMenuInteractive')}`, `cursor: pointer;`)
+        .add(`${m.get('.', 'menuInteractiveWrapper')}`, `
           display: flex;
           flex-direction: row;
           justify-content: center;
@@ -307,21 +307,21 @@ m.gen = __cache(m.gen, hash);
           top: 0px;
           left: 0px;
         `)
-        .add('.menuInteractive', `
+        .add(`${m.get('.', 'menuInteractive')}`, `
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
           grid-column-gap: 1em;
-          grid-template-areas: "a1 a2 a3" "a4 a5 a6" "a7 a8 a9" "a10 a11 a12";
+          grid-template-areas: "${m.get('.', 'a1', true)} ${m.get('.', 'a2', true)} ${m.get('.', 'a3', true)}" "${m.get('.', 'a4', true)} ${m.get('.', 'a5', true)} ${m.get('.', 'a6', true)}" "${m.get('.', 'a7', true)} ${m.get('.', 'a8', true)} ${m.get('.', 'a9', true)}" "${m.get('.', 'a10', true)} ${m.get('.', 'a11', true)} ${m.get('.', 'a12', true)}";
           background-color: white;
           padding: 1em;
           box-sizing: border-box;
           box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
         `)
-        .add('.invisible', `background: rgb(230, 230, 230)!important;`)
-        .add('.changed', `background: rgb(220, 220, 255)!important;`)
-        .add('.changed.error', `background: rgb(255, 128, 128)!important;`)
-        .add('.invisible span', `opacity: 0!important; `)
-        .add('.winnerScreen', `
+        .add(`${m.get('.', 'invisible')}`, `background: rgb(230, 230, 230)!important;`)
+        .add(`${m.get('.', 'changed')}`, `background: rgb(220, 220, 255)!important;`)
+        .add(`${m.get('.', 'changed')}${m.get('.', 'error')}`, `background: rgb(255, 128, 128)!important;`)
+        .add(`${m.get('.', 'invisible')} span`, `opacity: 0!important; `)
+        .add(`${m.get('.', 'winnerScreen')}`, `
           z-index: 1;
           background: rgba(0,0,0,0.8);
           position: fixed;
@@ -335,25 +335,25 @@ m.gen = __cache(m.gen, hash);
           align-content: center;
           align-items: center;
         `)
-        .add('.winnerInfo1', `
+        .add(`${m.get('.', 'winnerInfo1')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 0.25em;
         `)
-        .add('.winnerInfo2', `
+        .add(`${m.get('.', 'winnerInfo2')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 0.25em;
         `)
-        .add('.timeInfo', `
+        .add(`${m.get('.', 'timeInfo')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 1.25em;
         `)
-        .add('.levelSelector', `
+        .add(`${m.get('.', 'levelSelector')}`, `
         z-index: 1;
         background: rgba(0,0,0,0.8);
         position: fixed;
@@ -366,7 +366,7 @@ m.gen = __cache(m.gen, hash);
         justify-content: center;
         align-content: center;
         align-items: center;`)
-        .add('.changed span', ` opacity: 1!important; `);
+        .add(`${m.get('.', 'changed')} span'`, ` opacity: 1!important; `);
   };
 
   obj.makeScene = async () => {
@@ -374,20 +374,12 @@ m.gen = __cache(m.gen, hash);
       setTimeout(() => {
         // console.log('[makeScene]');
         obj.scene = element('div', {
-          id: 'scene',
-          class: 'scene hidden',
+          id: m.get('.', 'scene', true),
+          class: `${m.get('.', 'scene', true)} ${m.get('.', 'hidden', true)}`,
           style: 'transform: scale(1);',
         });
-        obj.loading = document.body.querySelector('.loading');
-        if (!obj.loading) {
-          obj.loading = element('div', {
-            id: 'loading',
-            class: 'loading',
-            text: 'Loading! Please wait!...',
-          });
-        }
+
         insert(obj.scene);
-        insert(obj.loading);
         resolve();
       }, 1000);
     });
@@ -531,7 +523,7 @@ m.gen = __cache(m.gen, hash);
         error += `background: rgba(255, 0, 0, 0.30);`;
 
         const newElement = element('div', {
-          class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : 'invisible interactive',
+          class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : `${m.get('.', 'invisible', true)} ${m.get('.', 'interactive', true)}`,
           style: xItem.double ? error : stdStyle,
           event: {
             type: 'click',
@@ -557,19 +549,19 @@ m.gen = __cache(m.gen, hash);
     if (obj.data[y][x]) {
       if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
         const divMenuWrapper = element('div', {
-          'class': 'menuInteractiveWrapper',
+          'class': m.get('.', 'menuInteractiveWrapper', true),
           'style': '',
         });
         const divMenu = element('div', {
-          'class': 'menuInteractive',
+          'class': m.get('.', 'menuInteractive', true),
           'style': '',
         });
         const buttonsArray = '123456789X'.split('');
         buttonsArray.forEach((item) => {
           const newElement = element('div', {
             text: item,
-            class: 'btn btnMenuInteractive',
-            style: item === 'X' ? 'grid-area: a11;' : '',
+            class: `${m.get('.', 'btn', true)} ${m.get('.', 'btnMenuInteractive', true)}`,
+            style: item === 'X' ? `grid-area: ${m.get('.', 'a11', true)};` : '',
             event: {
               type: 'click',
               handler(ctx) {
@@ -661,12 +653,12 @@ m.gen = __cache(m.gen, hash);
         if (obj.data[y][x].isColumnError || obj.data[y][x].isStripeError || obj.data[y][x].isAreaError) {
           clss({
             element: item,
-            add: 'error',
+            add: m.get('.', 'error', true),
           });
         } else {
           clss({
             element: item,
-            remove: 'error',
+            remove: m.get('.', 'error', true),
           });
         }
         return resolve();
@@ -799,7 +791,7 @@ m.gen = __cache(m.gen, hash);
               }
               return false;
             }).filter((itm) => !!itm);
-            //
+
             if (double.length > 0) {
               if (double.length === 1) {
                 if (double[0].value === double[0].userInput) {
@@ -836,14 +828,14 @@ m.gen = __cache(m.gen, hash);
             span.innerText = obj.data[y][x].userInput;
             clss({
               element: item,
-              remove: 'invisible',
-              add: 'changed',
+              remove: m.get('.', 'invisible', true),
+              add: m.get('.', 'changed', true),
             });
           } else if (obj.data[y][x].userInput === null) {
             clss({
               element: item,
-              add: 'invisible',
-              remove: 'changed',
+              add: m.get('.', 'invisible', true),
+              remove: m.get('.', 'changed', true),
             });
           }
         }
@@ -866,31 +858,31 @@ m.gen = __cache(m.gen, hash);
     const t = `${$hour}:${$minute}:${$seconds}`;
 
     obj.winnerScreen = element('div', {
-      id: 'winnerScreen',
-      class: 'winnerScreen',
+      id: m.get('.', 'winnerScreen', true),
+      class: m.get('.', 'winnerScreen', true),
     });
 
     obj.winnerInfo1 = element('div', {
-      id: 'winnerInfo1',
-      class: 'winnerInfo1',
+      id: m.get('.', 'winnerInfo1', true),
+      class: m.get('.', 'winnerInfo1', true),
       text: `Congratulations!`,
     });
 
     obj.winnerInfo2 = element('div', {
-      id: 'winnerInfo2',
-      class: 'winnerInfo2',
+      id: m.get('.', 'winnerInfo2', true),
+      class: m.get('.', 'winnerInfo2', true),
       text: `You Win!`,
     });
 
     obj.timeInfo = element('div', {
-      id: 'timeInfo',
-      class: 'timeInfo',
+      id: m.get('.', 'timeInfo', true),
+      class: m.get('.', 'timeInfo', true),
       text: `Your Time: ${t}`,
     });
 
     obj.playAgain = element('div', {
-      id: 'playAgain',
-      class: 'btn playAgain',
+      id: m.get('.', 'playAgain', true),
+      class: `${m.get('.', 'btn', true)} ${m.get('.', 'playAgain', true)}`,
       text: `Play Again!`,
       event: {
         type: 'click',
@@ -960,26 +952,26 @@ m.gen = __cache(m.gen, hash);
     const startGameHandler = (level = 'ease') => {
       obj.makeGame(level);
 
-      clss({element: obj.scene, remove: 'hidden'});
-      clss({element: obj.levelSelector, add: 'hidden'});
-      clss({element: obj.startScreen, add: 'hidden'});
-      clss({element: obj.navigationPanel, remove: 'hidden'});
+      clss({element: obj.scene, remove: m.get('.', 'hidden', true)});
+      clss({element: obj.levelSelector, add: m.get('.', 'hidden', true)});
+      clss({element: obj.startScreen, add: m.get('.', 'hidden', true)});
+      clss({element: obj.navigationPanel, remove: m.get('.', 'hidden', true)});
       obj.render();
       obj.isSceneReady = true;
       obj.isStartGame = true;
     };
     obj.startScreen = element('div', {
-      id: 'startScreen',
-      class: 'startScreen hidden',
+      id: m.get('.', 'startScreen', true),
+      class: `${m.get('.', 'startScreen', true)} ${m.get('.', 'hidden', true)}`,
     });
     obj.levelSelector = element('div', {
-      id: 'levelSelector',
-      class: 'levelSelector hidden',
+      id: m.get('.', 'levelSelector', true),
+      class: `${m.get('.', 'levelSelector', true)} ${m.get('.', 'hidden', true)}`,
     });
 
     obj.levelSelectorEase = element('div', {
-      id: 'btnEase',
-      class: 'btn',
+      id: m.get('.', 'btnEase', true),
+      class: m.get('.', 'btn', true),
       text: 'Easy',
       event: {
         type: 'click',
@@ -989,8 +981,8 @@ m.gen = __cache(m.gen, hash);
       },
     });
     obj.levelSelectorMedium = element('div', {
-      id: 'btnMedium',
-      class: 'btn',
+      id: m.get('.', 'btnMedium', true),
+      class: m.get('.', 'btn', true),
       text: 'Medium',
       event: {
         type: 'click',
@@ -1000,8 +992,8 @@ m.gen = __cache(m.gen, hash);
       },
     });
     obj.levelSelectorHard = element('div', {
-      id: 'btnHard',
-      class: 'btn',
+      id: m.get('.', 'btnHard', true),
+      class: m.get('.', 'btn', true),
       text: 'Hard',
       event: {
         type: 'click',
@@ -1012,15 +1004,15 @@ m.gen = __cache(m.gen, hash);
     });
 
     obj.btnShowSudoku = element('div', {
-      id: 'btnShowSudoku',
-      class: 'btnShowSudoku btn',
+      id: m.get('.', 'btnShowSudoku', true),
+      class: `${m.get('.', 'btnShowSudoku', true)} ${m.get('.', 'btn', true)}`,
       text: 'Show sudoku',
       event: {
         type: 'click',
         handler() {
-          clss({element: obj.scene, remove: 'hidden'});
-          clss({element: obj.startScreen, add: 'hidden'});
-          clss({element: obj.navigationPanel, remove: 'hidden'});
+          clss({element: obj.scene, remove: m.get('.', 'hidden', true)});
+          clss({element: obj.startScreen, add: m.get('.', 'hidden', true)});
+          clss({element: obj.navigationPanel, remove: m.get('.', 'hidden', true)});
           obj.render();
           obj.isSceneReady = true;
         },
@@ -1028,13 +1020,13 @@ m.gen = __cache(m.gen, hash);
     });
 
     obj.btnStartGame = element('div', {
-      id: 'btnStartGame',
-      class: 'btnStartGame btn',
+      id: m.get('.', 'btnStartGame', true),
+      class: `${m.get('.', 'btnStartGame', true)} ${m.get('.', 'btn', true)}`,
       text: 'Start game',
       event: {
         type: 'click',
         handler() {
-          clss({element: obj.levelSelector, remove: 'hidden'});
+          clss({element: obj.levelSelector, remove: m.get('.', 'hidden', true)});
         },
       },
     });
@@ -1049,18 +1041,18 @@ m.gen = __cache(m.gen, hash);
     insert(obj.levelSelectorHard, obj.levelSelector);
     insert(obj.levelSelector);
 
-    clss({element: obj.loading, add: 'hidden'});
-    clss({element: obj.startScreen, remove: 'hidden'});
+    clss({element: obj.loading, add: m.get('.', 'hidden', true)});
+    clss({element: obj.startScreen, remove: m.get('.', 'hidden', true)});
   };
 
   obj.makeNavigation = () => {
     obj.navigationPanel = element('div', {
-      id: 'navigationPanel',
-      class: 'navigationPanel hidden',
+      id: m.get('.', 'navigationPanel', true),
+      class: `${m.get('.', 'navigationPanel', true)} ${m.get('.', 'hidden', true)}`,
     });
     obj.navigationBack = element('div', {
-      id: 'navigationBack',
-      class: 'navigationBack btn',
+      id: m.get('.', 'navigationBack', true),
+      class: `${m.get('.', 'navigationBack', true)} ${m.get('.', 'btn', true)}`,
       text: 'Back',
       event: {
         type: 'click',
@@ -1080,7 +1072,7 @@ m.gen = __cache(m.gen, hash);
   };
 
   obj.init = async () => {
-    obj.cssCorn = new $CssCorn({id: 'cssCorn', willRender: true});
+    obj.cssCorn = new $CssCorn({id: m.get('.', 'cssCorn', true), willRender: true});
     obj.addStyles();
     await obj.makeScene();
     await obj.createData();
