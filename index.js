@@ -245,6 +245,7 @@ const convertMS = ( milliseconds ) => {
         line-height: 1;
         font-size: 18px;
         font-family: ${rndFromArray(fonts)};
+        user-select: none;
         cursor: pointer;
     `)
         .add('.btn:hover', `
