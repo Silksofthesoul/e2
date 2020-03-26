@@ -1102,6 +1102,22 @@ m.gen = __cache(m.gen, hash);
   };
 
   obj.run = () => {
+    obj.loading = document.body.querySelector('.loading');
+    if (!obj.loading) {
+      obj.loading = element('div', {
+        id: m.get('.', 'loading', true),
+        class: m.get('.', 'loading'),
+        text: 'Loading! Please wait!...',
+      });
+    } else {
+      obj.loading.id = m.get('.', 'loading', true);
+      clss({
+        element: obj.loading,
+        remove: 'loading',
+        add: m.get('.', 'loading', true),
+      });
+    }
+    insert(obj.loading);
     obj.init();
   };
   document.addEventListener('DOMContentLoaded', () => obj.run());
