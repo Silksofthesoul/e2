@@ -17,27 +17,23 @@ const int = (_) => parseInt(_);
 const getColumn = (matrix, x) => [...matrix].map((item) => item[x]);
 const getStripe = (matrix, y) => [...matrix][y];
 const getMatrixArea = (matrix, startX, startY, width, height) => [...matrix]
-    .map((itemY, y) =>
-      y >= startY && y < startY + height ?
-        itemY
-            .map((itemX, x) =>
-          x >= startX && x < startX + width ?
-            itemX : false)
-            .filter((itm)=>itm!==false) : false)
-    .filter((itm)=>itm!==false);
+  .map((itemY, y) => (y >= startY && y < startY + height
+    ? itemY
+      .map((itemX, x) => (x >= startX && x < startX + width
+        ? itemX : false))
+      .filter((itm) => itm !== false) : false))
+  .filter((itm) => itm !== false);
 const setMatrixElement = (_matrix, x, y, newVal) => {
   const matrix = [..._matrix];
   matrix[y][x] = newVal;
   return matrix;
 };
 const setMatrixArea = (matrix, startX, startY, width, height, fn) => [...matrix]
-    .map((itemY, y) =>
-        y >= startY && y < startY + height ?
-          itemY
-              .map((itemX, x) =>
-            x >= startX && x < startX + width ?
-              fn(x, y, itemX) : itemX)
-              : itemY);
+  .map((itemY, y) => (y >= startY && y < startY + height
+    ? itemY
+      .map((itemX, x) => (x >= startX && x < startX + width
+        ? fn(x, y, itemX) : itemX))
+    : itemY));
 
 const range = (...args) => {
   let start = 0;
@@ -84,7 +80,7 @@ const d = (f, arr) => {
   return false;
 };
 
-const insert = (child, _root=null) => {
+const insert = (child, _root = null) => {
   const root = _root || document.body;
   if (!child) return false;
   root.appendChild(child);
@@ -100,7 +96,7 @@ const element = (type, _params = {}) => {
   if (params.text) newElement.innerText = params.text;
   if (params.event) {
     newElement.addEventListener(params.event.type, () => {
-      params.event.handler({element: newElement});
+      params.event.handler({ element: newElement });
     });
   }
   return newElement;
@@ -121,16 +117,16 @@ const clss = (arg) => {
 };
 
 const s = (_) => JSON.stringify(_);
-const convertMS = ( milliseconds ) => {
+const convertMS = (milliseconds) => {
   // from https://gist.github.com/Erichain/6d2c2bf16fe01edfcffa
   let day; let hour; let minute; let seconds;
   seconds = Math.floor(milliseconds / 1000);
   minute = Math.floor(seconds / 60);
-  seconds = seconds % 60;
+  seconds %= 60;
   hour = Math.floor(minute / 60);
-  minute = minute % 60;
+  minute %= 60;
   day = Math.floor(hour / 24);
-  hour = hour % 24;
+  hour %= 24;
   return {
     day,
     hour,
@@ -141,7 +137,7 @@ const convertMS = ( milliseconds ) => {
 
 function __cache(func, hash) {
   const cache = new Map();
-  return function() {
+  return function () {
     const key = hash(arguments);
     if (cache.has(key)) return cache.get(key);
     const result = func.call(this, ...arguments);
@@ -157,8 +153,8 @@ function hash(args) {
 const m = {
   gen(start, end) {
     const library = 'qwertyuiopasdfghjklzxcvbnm_';
-    const prefix = rndFromArray(library);
-    const c = range(3).map((item, i) => i % 3 === 0 ? rndMinMaxInt(0, 9) : rndFromArray(library)).join('');
+    const prefix = `${rndFromArray(library)}${rndFromArray(library)}`;
+    const c = range(3).map((item, i) => (i % 3 === 0 ? rndMinMaxInt(0, 9) : rndFromArray(library))).join('');
     return start + prefix + c;
   },
   get(start, end, cut = false) {
@@ -168,7 +164,7 @@ const m = {
 };
 m.gen = __cache(m.gen, hash);
 
-(()=>{
+(() => {
   const obj = {
     cssCorn: null,
     data: [],
@@ -200,7 +196,7 @@ m.gen = __cache(m.gen, hash);
     const wHeigth = window.innerHeight - 20;
     const sqSize = Math.min(wWidth, wHeigth);
     obj.cssCorn
-        .add('body', `
+      .add('body', `
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -214,14 +210,14 @@ m.gen = __cache(m.gen, hash);
         line-height: 1;
         font-size: 18px;
     `)
-        .add(m.get('.', 'loading'), `
+      .add(m.get('.', 'loading'), `
         font-size: ${rndMinMax(1.2, 4.5)}em;
         font-family: ${rndFromArray(fonts)};
     `)
-        .add(m.get('.', 'hidden'), `
+      .add(m.get('.', 'hidden'), `
         display: none!important;
     `)
-        .add(m.get('.', 'scene'), `
+      .add(m.get('.', 'scene'), `
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -231,7 +227,7 @@ m.gen = __cache(m.gen, hash);
         height: ${sqSize}px;
         transition: width 0.15s 0s ease-out, height 0.1s 0s ease-out;
     `)
-        .add(`${m.get('.', 'scene')} div`, `
+      .add(`${m.get('.', 'scene')} div`, `
         box-sizing: border-box;
         text-align: center;
         line-height: 1;
@@ -246,11 +242,11 @@ m.gen = __cache(m.gen, hash);
         transition: width 0.15s 0s ease-out, height 0.15s 0s ease-out, font-size 0.25s 0s ease-out;
         font-weight 0.25s 0s ease-out;
     `)
-        .add(`${m.get('.', 'scene')} div${m.get('.', 'error')}:not(${m.get('.', 'changed')})`, `background: rgb(255, 220, 220)!important;`)
-        .add(`${m.get('.', 'scene')} div span`, `
+      .add(`${m.get('.', 'scene')} div${m.get('.', 'error')}:not(${m.get('.', 'changed')})`, 'background: rgb(255, 220, 220)!important;')
+      .add(`${m.get('.', 'scene')} div span`, `
         transition: transform 0.25s 0s ease-out;
     `)
-        .add(`${m.get('.', 'startScreen')}`, `
+      .add(`${m.get('.', 'startScreen')}`, `
         display: flex;
         background-color: #fff;
         flex-direction: column;
@@ -265,7 +261,7 @@ m.gen = __cache(m.gen, hash);
         line-height: 1;
         font-size: 18px;
     `)
-        .add(`${m.get('.', 'btn')}`, `
+      .add(`${m.get('.', 'btn')}`, `
         display: inline-block;
         background-color: #fff;
         outline: 1px solid #ccc;
@@ -277,12 +273,12 @@ m.gen = __cache(m.gen, hash);
         user-select: none;
         cursor: pointer;
     `)
-        .add(`${m.get('.', 'btn')}:hover`, `
+      .add(`${m.get('.', 'btn')}:hover`, `
         display: inline-block;
         background-color: #efa;
         outline: 2px solid #ccc;
     `)
-        .add(`${m.get('.', 'navigationPanel')}`, `
+      .add(`${m.get('.', 'navigationPanel')}`, `
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -292,9 +288,9 @@ m.gen = __cache(m.gen, hash);
       padding: 1em;
     `)
 
-        .add(`${m.get('.', 'interactive')}`, `cursor: pointer;`)
-        .add(`${m.get('.', 'btnMenuInteractive')}`, `cursor: pointer;`)
-        .add(`${m.get('.', 'menuInteractiveWrapper')}`, `
+      .add(`${m.get('.', 'interactive')}`, 'cursor: pointer;')
+      .add(`${m.get('.', 'btnMenuInteractive')}`, 'cursor: pointer;')
+      .add(`${m.get('.', 'menuInteractiveWrapper')}`, `
           display: flex;
           flex-direction: row;
           justify-content: center;
@@ -307,7 +303,7 @@ m.gen = __cache(m.gen, hash);
           top: 0px;
           left: 0px;
         `)
-        .add(`${m.get('.', 'menuInteractive')}`, `
+      .add(`${m.get('.', 'menuInteractive')}`, `
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
           grid-column-gap: 1em;
@@ -317,11 +313,11 @@ m.gen = __cache(m.gen, hash);
           box-sizing: border-box;
           box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
         `)
-        .add(`${m.get('.', 'invisible')}`, `background: rgb(230, 230, 230)!important;`)
-        .add(`${m.get('.', 'changed')}`, `background: rgb(220, 220, 255)!important;`)
-        .add(`${m.get('.', 'changed')}${m.get('.', 'error')}`, `background: rgb(255, 128, 128)!important;`)
-        .add(`${m.get('.', 'invisible')} span`, `opacity: 0!important; `)
-        .add(`${m.get('.', 'winnerScreen')}`, `
+      .add(`${m.get('.', 'invisible')}`, 'background: rgb(230, 230, 230)!important;')
+      .add(`${m.get('.', 'changed')}`, 'background: rgb(220, 220, 255)!important;')
+      .add(`${m.get('.', 'changed')}${m.get('.', 'error')}`, 'background: rgb(255, 128, 128)!important;')
+      .add(`${m.get('.', 'invisible')} span`, 'opacity: 0!important; ')
+      .add(`${m.get('.', 'winnerScreen')}`, `
           z-index: 1;
           background: rgba(0,0,0,0.8);
           position: fixed;
@@ -335,25 +331,25 @@ m.gen = __cache(m.gen, hash);
           align-content: center;
           align-items: center;
         `)
-        .add(`${m.get('.', 'winnerInfo1')}`, `
+      .add(`${m.get('.', 'winnerInfo1')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 0.25em;
         `)
-        .add(`${m.get('.', 'winnerInfo2')}`, `
+      .add(`${m.get('.', 'winnerInfo2')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 0.25em;
         `)
-        .add(`${m.get('.', 'timeInfo')}`, `
+      .add(`${m.get('.', 'timeInfo')}`, `
         font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
         padding-bottom: 1.25em;
         `)
-        .add(`${m.get('.', 'levelSelector')}`, `
+      .add(`${m.get('.', 'levelSelector')}`, `
         z-index: 1;
         background: rgba(0,0,0,0.8);
         position: fixed;
@@ -366,24 +362,22 @@ m.gen = __cache(m.gen, hash);
         justify-content: center;
         align-content: center;
         align-items: center;`)
-        .add(`${m.get('.', 'changed')} span'`, ` opacity: 1!important; `);
+      .add(`${m.get('.', 'changed')} span'`, ' opacity: 1!important; ');
   };
 
-  obj.makeScene = async () => {
-    return new Promise(function(resolve, reject) {
-      setTimeout(() => {
-        // console.log('[makeScene]');
-        obj.scene = element('div', {
-          id: m.get('.', 'scene', true),
-          class: `${m.get('.', 'scene', true)} ${m.get('.', 'hidden', true)}`,
-          style: 'transform: scale(1);',
-        });
+  obj.makeScene = async () => new Promise(((resolve, reject) => {
+    setTimeout(() => {
+      // console.log('[makeScene]');
+      obj.scene = element('div', {
+        id: m.get('.', 'scene', true),
+        class: `${m.get('.', 'scene', true)} ${m.get('.', 'hidden', true)}`,
+        style: 'transform: scale(1);',
+      });
 
-        insert(obj.scene);
-        resolve();
-      }, 1000);
-    });
-  };
+      insert(obj.scene);
+      resolve();
+    }, 1000);
+  }));
 
   obj.createData = async () => {
     const asset = range(1, 9);
@@ -391,75 +385,71 @@ m.gen = __cache(m.gen, hash);
     const height = width;
     const EMPTY = '.';
     const dataTemplate = await makeMatrix(width, height, (x, y) => EMPTY);
-    const generateNewVal = async (gen, exclude) => {
-      return new Promise(async (resolve, reject) => {
-        let newVal = gen();
-        if (exclude.length >= asset.length) return reject('error!');
-        if (exclude.includes(newVal)) {
+    const generateNewVal = async (gen, exclude) => new Promise(async (resolve, reject) => {
+      let newVal = gen();
+      if (exclude.length >= asset.length) return reject('error!');
+      if (exclude.includes(newVal)) {
+        try {
+          newVal = await generateNewVal(gen, exclude);
+        } catch (e) {
+          return reject(e);
+        }
+      }
+      return resolve(newVal);
+    });
+
+    const generateMatrix = async (_data) => new Promise(async (resolve, reject) => {
+      let data = [..._data];
+      let [x, y] = [0, 0];
+
+      const sectorList = [0, 3, 6];
+      let regressionCount = 0;
+      let errr = -1;
+      for (y = 0; y < data.length; y++) {
+        for (x = 0; x < data[y].length; x++) {
+          const column = getColumn(data, x);
+          const stripe = getStripe(data, y);
+          let areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
+          let areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
+          if (areaStartX === null || areaStartY === null) console.log('alarm');
+          const areaWidth = 3;
+          const areaHeight = 3;
+          const area = getMatrixArea(data, areaStartX, areaStartY, areaWidth, areaHeight);
+          const exclude = [...new Set([...column, ...stripe, ...area.flat()].filter((itm) => itm !== EMPTY))];
+          let newVal = null;
+          let isError = false;
           try {
-            newVal = await generateNewVal(gen, exclude);
+            newVal = await generateNewVal(() => rndFromArray(asset), [...exclude]);
           } catch (e) {
-            return reject(e);
+            isError = true;
           }
-        }
-        return resolve(newVal);
-      });
-    };
-
-    const generateMatrix = async (_data) => {
-      return new Promise(async (resolve, reject) => {
-        let data = [..._data];
-        let [x, y] = [0, 0];
-
-        const sectorList = [0, 3, 6];
-        let regressionCount = 0;
-        let errr = -1;
-        for (y = 0; y < data.length; y++) {
-          for (x = 0; x < data[y].length; x++) {
-            const column = getColumn(data, x);
-            const stripe = getStripe(data, y);
-            let areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
-            let areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
-            if (areaStartX===null || areaStartY===null) console.log('alarm');
-            const areaWidth = 3;
-            const areaHeight = 3;
-            const area = getMatrixArea(data, areaStartX, areaStartY, areaWidth, areaHeight);
-            const exclude = [...new Set([...column, ...stripe, ...area.flat()].filter((itm) => itm !== EMPTY))];
-            let newVal = null;
-            let isError = false;
-            try {
-              newVal = await generateNewVal(() => rndFromArray(asset), [...exclude]);
-            } catch (e) {
-              isError = true;
-            }
-            if (!isError) {
-              data = setMatrixElement(data, x, y, newVal);
-            } else {
-              errr++;
-              if (errr > 500) return reject(['error']);
-              x = areaStartX - 1;
-              y = areaStartY - 1;
-              if (y < 0) y = 0;
-              if (x < 0) x = 0;
-              if (y !== 0 && x !== 0) {
-                regressionCount++;
-                if (regressionCount > 3) {
-                  regressionCount = 0;
-                  x = 0;
-                  y = 0;
-                  areaStartX = 0;
-                  areaStartY = 0;
-                  data = setMatrixArea(data, 0, 0, 9, 9, ()=> EMPTY);
-                }
+          if (!isError) {
+            data = setMatrixElement(data, x, y, newVal);
+          } else {
+            errr++;
+            if (errr > 500) return reject(['error']);
+            x = areaStartX - 1;
+            y = areaStartY - 1;
+            if (y < 0) y = 0;
+            if (x < 0) x = 0;
+            if (y !== 0 && x !== 0) {
+              regressionCount++;
+              if (regressionCount > 3) {
+                regressionCount = 0;
+                x = 0;
+                y = 0;
+                areaStartX = 0;
+                areaStartY = 0;
+                data = setMatrixArea(data, 0, 0, 9, 9, () => EMPTY);
               }
-              data = setMatrixArea(data, areaStartX, areaStartY, areaWidth, areaHeight, ()=> EMPTY);
-              if (x === 0 && y === 0) data = setMatrixElement(data, x, y, rndFromArray(asset));
             }
+            data = setMatrixArea(data, areaStartX, areaStartY, areaWidth, areaHeight, () => EMPTY);
+            if (x === 0 && y === 0) data = setMatrixElement(data, x, y, rndFromArray(asset));
           }
         }
-        return resolve(data);
-      });
-    };
+      }
+      return resolve(data);
+    });
 
 
     let data = [];
@@ -478,13 +468,11 @@ m.gen = __cache(m.gen, hash);
     }
     if (data.length === 0) window.location.reload();
 
-    data = [...data].map((yItem, yyy) => {
-      return yItem.map((xItem, xxx) => ({
-        value: xItem,
-        x: xxx,
-        y: yyy,
-      }));
-    });
+    data = [...data].map((yItem, yyy) => yItem.map((xItem, xxx) => ({
+      value: xItem,
+      x: xxx,
+      y: yyy,
+    })));
 
     for (let y = 0; y < data.length; y++) {
       for (let x = 0; x < data[y].length; x++) {
@@ -508,19 +496,19 @@ m.gen = __cache(m.gen, hash);
 
     obj.data.forEach((yItem, y) => {
       yItem.forEach((xItem, x) => {
-        let stdStyle = ``;
+        let stdStyle = '';
         stdStyle += `${x === 2 || x === 5 ? borderRight : ''}`;
         stdStyle += `${y === 2 || y === 5 ? borderBottom : ''}`;
-        stdStyle += `background: rgba(255, 255, 255, 1);`;
+        stdStyle += 'background: rgba(255, 255, 255, 1);';
         stdStyle += `
           font-size: ${rndMinMax(0.9, 3.1)}em;
           font-family: ${rndFromArray(fonts)};
         `;
 
-        let error = ``;
+        let error = '';
         error += `${x === 2 || x === 5 ? borderRight : ''}`;
         error += `${y === 2 || y === 5 ? borderBottom : ''}`;
-        error += `background: rgba(255, 0, 0, 0.30);`;
+        error += 'background: rgba(255, 0, 0, 0.30);';
 
         const newElement = element('div', {
           class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : `${m.get('.', 'invisible', true)} ${m.get('.', 'interactive', true)}`,
@@ -528,14 +516,14 @@ m.gen = __cache(m.gen, hash);
           event: {
             type: 'click',
             handler(ctx) {
-              const {element: el = null} = ctx;
-              const params = {x, y, element: el};
+              const { element: el = null } = ctx;
+              const params = { x, y, element: el };
               obj.showMenuVariants(params);
             },
           },
         });
         const span = element('span', {
-          text: xItem.isVisible === undefined || xItem.isVisible === false ? str(xItem.value): ' ',
+          text: xItem.isVisible === undefined || xItem.isVisible === false ? str(xItem.value) : ' ',
           style: `transform: rotate(${rndMinMaxInt(-22, 22)}deg);`,
         });
         insert(span, newElement);
@@ -545,16 +533,16 @@ m.gen = __cache(m.gen, hash);
   };
 
   obj.showMenuVariants = (params) => {
-    const {x, y, element: el=null} = params;
+    const { x, y, element: el = null } = params;
     if (obj.data[y][x]) {
       if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
         const divMenuWrapper = element('div', {
-          'class': m.get('.', 'menuInteractiveWrapper', true),
-          'style': '',
+          class: m.get('.', 'menuInteractiveWrapper', true),
+          style: '',
         });
         const divMenu = element('div', {
-          'class': m.get('.', 'menuInteractive', true),
-          'style': '',
+          class: m.get('.', 'menuInteractive', true),
+          style: '',
         });
         const buttonsArray = '123456789X'.split('');
         buttonsArray.forEach((item) => {
@@ -565,7 +553,7 @@ m.gen = __cache(m.gen, hash);
             event: {
               type: 'click',
               handler(ctx) {
-                const {x, y, item: text = null} = {...params, item};
+                const { x, y, item: text = null } = { ...params, item };
                 // console.log('SS', {x, y, text}, obj.data[y][x].userInput, obj.data[y][x]);
                 if (text === 'X') {
                   obj.data[y][x].userInput = null;
@@ -604,10 +592,12 @@ m.gen = __cache(m.gen, hash);
       for (let i = 0; i < childrens.length; i++) {
         const item = childrens[i];
         if (x > countX - 1) {
-          x=0; y++;
+          x = 0; y++;
         }
         for (let i = 0; i < callbackArray.render.length; i++) {
-          await callbackArray.render[i]({x, y, item, wWidth, wHeigth, sqSize});
+          await callbackArray.render[i]({
+            x, y, item, wWidth, wHeigth, sqSize,
+          });
         }
         x++;
       }
@@ -617,232 +607,226 @@ m.gen = __cache(m.gen, hash);
     process();
   };
 
-  obj.sizeControll = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isSceneReady) {
-        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        obj.scene.style.width = `${sqSize}px`;
-        obj.scene.style.height = `${sqSize}px`;
-        item.style.width = `${sqSize / countX}px`;
-        item.style.height = `${sqSize / countY}px`;
+  obj.sizeControll = (arg) => new Promise((resolve, reject) => {
+    if (obj.isSceneReady) {
+      const {
+        x, y, item, wWidth, wHeigth, sqSize,
+      } = arg;
+      obj.scene.style.width = `${sqSize}px`;
+      obj.scene.style.height = `${sqSize}px`;
+      item.style.width = `${sqSize / countX}px`;
+      item.style.height = `${sqSize / countY}px`;
+    }
+    return resolve();
+  });
+
+  obj.charsMutate = (arg) => new Promise((resolve, reject) => {
+    if (obj.isSceneReady) {
+      const {
+        x, y, item, wWidth, wHeigth, sqSize,
+      } = arg;
+      const fqtr = rndMinMaxInt(0, 222);
+      if (d(fqtr, [13, 121])) item.style.fontSize = `${rndMinMax(0.9, 3.1)}em`;
+      if (d(fqtr, [5, 221])) item.style.fontFamily = rndFromArray(fonts);
+      if (d(fqtr, [13, 147])) {
+        item.querySelector('span')
+          .style.transform = `rotate(${rndMinMaxInt(-22, 22)}deg)`;
+      }
+    }
+    return resolve();
+  });
+
+  obj.processErrors = (arg) => new Promise((resolve, reject) => {
+    if (obj.isSceneReady) {
+      const {
+        x, y, item, wWidth, wHeigth, sqSize,
+      } = arg;
+      if (obj.data[y][x].isColumnError || obj.data[y][x].isStripeError || obj.data[y][x].isAreaError) {
+        clss({
+          element: item,
+          add: m.get('.', 'error', true),
+        });
+      } else {
+        clss({
+          element: item,
+          remove: m.get('.', 'error', true),
+        });
       }
       return resolve();
-    });
-  };
+    }
+    return resolve();
+  });
 
-  obj.charsMutate = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isSceneReady) {
-        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        const fqtr = rndMinMaxInt(0, 222);
-        if (d(fqtr, [13, 121])) item.style.fontSize = `${rndMinMax(0.9, 3.1)}em`;
-        if (d(fqtr, [5, 221])) item.style.fontFamily = rndFromArray(fonts);
-        if (d(fqtr, [13, 147])) {
-          item.querySelector('span')
-              .style.transform = `rotate(${rndMinMaxInt(-22, 22)}deg)`;
+  obj.columnDoubleSearching = (arg) => new Promise((resolve, reject) => {
+    if (obj.isStartGame) {
+      const data = [...obj.data];
+      let double = [];
+      let column = [];
+      const columnWithError = [];
+      for (let y = 0; y < data.length; y++) {
+        for (let x = 0; x < data[y].length; x++) {
+          const val = data[y][x].userInput;
+          column = getColumn(data, x);
+          double = column.map((item, i) => {
+            if (!val) return false;
+            if (item.userInput !== undefined) {
+              if (str(item.userInput) === str(val)) return item;
+            } else if (item.userInput === undefined) {
+              if (str(item.value) === val) {
+                return item;
+              }
+            }
+            return false;
+          }).filter((itm) => !!itm);
+
+          if (double.length > 0) {
+            if (double.length === 1) {
+              if (double[0].value === double[0].userInput) {
+                obj.data[item.y][item.x].isColumnError = false;
+              }
+            } else {
+              double.forEach((item, i) => {
+                obj.data[item.y][item.x].isColumnError = true;
+              });
+              columnWithError.push(obj.data[y][x]);
+            }
+          }
         }
       }
-      return resolve();
-    });
-  };
+      obj.data.forEach((itemY, y) => {
+        obj.data.forEach((itemX, x) => {
+          const f = columnWithError.find((item) => item.x === x && item.y === y);
+          if (!f) obj.data[y][x].isColumnError = false;
+          if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isColumnError = false;
+        });
+      });
+    }
+    resolve();
+  });
+  obj.stripeDoubleSearching = (arg) => new Promise((resolve, reject) => {
+    if (obj.isStartGame) {
+      const data = [...obj.data];
+      let double = [];
+      let stripe = [];
+      const stripeWithError = [];
+      for (let y = 0; y < data.length; y++) {
+        for (let x = 0; x < data[y].length; x++) {
+          const val = data[y][x].userInput;
+          stripe = getStripe(data, y);
+          double = stripe.map((item, i) => {
+            if (!val) return false;
+            if (item.userInput !== undefined) {
+              if (str(item.userInput) === str(val)) return item;
+            } else if (item.userInput === undefined) {
+              if (str(item.value) === val) {
+                return item;
+              }
+            }
+            return false;
+          }).filter((itm) => !!itm);
 
-  obj.processErrors = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isSceneReady) {
-        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        if (obj.data[y][x].isColumnError || obj.data[y][x].isStripeError || obj.data[y][x].isAreaError) {
+          if (double.length > 0) {
+            if (double.length === 1) {
+              if (double[0].value === double[0].userInput) {
+                obj.data[item.y][item.x].isStripeError = false;
+              }
+            } else {
+              double.forEach((item, i) => {
+                obj.data[item.y][item.x].isStripeError = true;
+              });
+              stripeWithError.push(obj.data[y][x]);
+            }
+          }
+        }
+      }
+      obj.data.forEach((itemY, y) => {
+        obj.data.forEach((itemX, x) => {
+          const f = stripeWithError.find((item) => item.x === x && item.y === y);
+          if (!f) obj.data[y][x].isStripeError = false;
+          if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isStripeError = false;
+        });
+      });
+    }
+    resolve();
+  });
+
+  obj.areaDoubleSearching = (arg) => new Promise((resolve, reject) => {
+    if (obj.isStartGame) {
+      const data = [...obj.data];
+      let double = [];
+      let area = [];
+      const areaWithError = [];
+      for (let y = 0; y < data.length; y++) {
+        for (let x = 0; x < data[y].length; x++) {
+          const val = data[y][x].userInput;
+          const sectorList = [0, 3, 6];
+          const width = 3;
+          const height = width;
+          const areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
+          const areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
+          area = getMatrixArea(obj.data, areaStartX, areaStartY, width, height).flat();
+          double = area.map((item, i) => {
+            if (!val) return false;
+            if (item.userInput !== undefined) {
+              if (str(item.userInput) === str(val)) return item;
+            } else if (item.userInput === undefined) {
+              if (str(item.value) === val) {
+                return item;
+              }
+            }
+            return false;
+          }).filter((itm) => !!itm);
+
+          if (double.length > 0) {
+            if (double.length === 1) {
+              if (double[0].value === double[0].userInput) {
+                obj.data[item.y][item.x].isAreaError = false;
+              }
+            } else {
+              double.forEach((item, i) => {
+                obj.data[item.y][item.x].isAreaError = true;
+              });
+              areaWithError.push(obj.data[y][x]);
+            }
+          }
+        }
+      }
+      obj.data.forEach((itemY, y) => {
+        obj.data.forEach((itemX, x) => {
+          const f = areaWithError.find((item) => item.x === x && item.y === y);
+          if (!f) obj.data[y][x].isAreaError = false;
+          if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isAreaError = false;
+        });
+      });
+    }
+    resolve();
+  });
+
+  obj.userInput = (arg) => new Promise((resolve, reject) => {
+    if (obj.isSceneReady) {
+      const {
+        x, y, item, wWidth, wHeigth, sqSize,
+      } = arg;
+      if (obj.data[y][x].userInput !== undefined && item) {
+        const span = item.querySelector('span');
+        if (obj.data[y][x].userInput !== null) {
+          span.innerText = obj.data[y][x].userInput;
           clss({
             element: item,
-            add: m.get('.', 'error', true),
+            remove: m.get('.', 'invisible', true),
+            add: m.get('.', 'changed', true),
           });
-        } else {
+        } else if (obj.data[y][x].userInput === null) {
           clss({
             element: item,
-            remove: m.get('.', 'error', true),
+            add: m.get('.', 'invisible', true),
+            remove: m.get('.', 'changed', true),
           });
         }
-        return resolve();
       }
-      return resolve();
-    });
-  };
-
-  obj.columnDoubleSearching = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isStartGame) {
-        const data = [...obj.data];
-        let double = [];
-        let column = [];
-        const columnWithError = [];
-        for (let y = 0; y < data.length; y++) {
-          for (let x = 0; x < data[y].length; x++) {
-            const val = data[y][x].userInput;
-            column = getColumn(data, x);
-            double = column.map((item, i) => {
-              if (!val) return false;
-              if (item.userInput !== undefined) {
-                if (str(item.userInput) === str(val)) return item;
-              } else if (item.userInput === undefined) {
-                if (str(item.value) === val) {
-                  return item;
-                }
-              }
-              return false;
-            }).filter((itm) => !!itm);
-
-            if (double.length > 0) {
-              if (double.length === 1) {
-                if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isColumnError = false;
-                }
-              } else {
-                double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isColumnError = true;
-                });
-                columnWithError.push(obj.data[y][x]);
-              }
-            }
-          }
-        }
-        obj.data.forEach((itemY, y) => {
-          obj.data.forEach((itemX, x) => {
-            const f = columnWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isColumnError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isColumnError = false;
-          });
-        });
-      }
-      resolve();
-    });
-  };
-  obj.stripeDoubleSearching = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isStartGame) {
-        const data = [...obj.data];
-        let double = [];
-        let stripe = [];
-        const stripeWithError = [];
-        for (let y = 0; y < data.length; y++) {
-          for (let x = 0; x < data[y].length; x++) {
-            const val = data[y][x].userInput;
-            stripe = getStripe(data, y);
-            double = stripe.map((item, i) => {
-              if (!val) return false;
-              if (item.userInput !== undefined) {
-                if (str(item.userInput) === str(val)) return item;
-              } else if (item.userInput === undefined) {
-                if (str(item.value) === val) {
-                  return item;
-                }
-              }
-              return false;
-            }).filter((itm) => !!itm);
-
-            if (double.length > 0) {
-              if (double.length === 1) {
-                if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isStripeError = false;
-                }
-              } else {
-                double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isStripeError = true;
-                });
-                stripeWithError.push(obj.data[y][x]);
-              }
-            }
-          }
-        }
-        obj.data.forEach((itemY, y) => {
-          obj.data.forEach((itemX, x) => {
-            const f = stripeWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isStripeError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isStripeError = false;
-          });
-        });
-      }
-      resolve();
-    });
-  };
-
-  obj.areaDoubleSearching = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isStartGame) {
-        const data = [...obj.data];
-        let double = [];
-        let area = [];
-        const areaWithError = [];
-        for (let y = 0; y < data.length; y++) {
-          for (let x = 0; x < data[y].length; x++) {
-            const val = data[y][x].userInput;
-            const sectorList = [0, 3, 6];
-            const width = 3;
-            const height = width;
-            const areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
-            const areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
-            area = getMatrixArea(obj.data, areaStartX, areaStartY, width, height).flat();
-            double = area.map((item, i) => {
-              if (!val) return false;
-              if (item.userInput !== undefined) {
-                if (str(item.userInput) === str(val)) return item;
-              } else if (item.userInput === undefined) {
-                if (str(item.value) === val) {
-                  return item;
-                }
-              }
-              return false;
-            }).filter((itm) => !!itm);
-
-            if (double.length > 0) {
-              if (double.length === 1) {
-                if (double[0].value === double[0].userInput) {
-                  obj.data[item.y][item.x].isAreaError = false;
-                }
-              } else {
-                double.forEach((item, i) => {
-                  obj.data[item.y][item.x].isAreaError = true;
-                });
-                areaWithError.push(obj.data[y][x]);
-              }
-            }
-          }
-        }
-        obj.data.forEach((itemY, y) => {
-          obj.data.forEach((itemX, x) => {
-            const f = areaWithError.find((item) => item.x === x && item.y === y);
-            if (!f) obj.data[y][x].isAreaError = false;
-            if (obj.data[y][x].value === obj.data[y][x].userInput) obj.data[y][x].isAreaError = false;
-          });
-        });
-      }
-      resolve();
-    });
-  };
-
-  obj.userInput = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isSceneReady) {
-        const {x, y, item, wWidth, wHeigth, sqSize} = arg;
-        if (obj.data[y][x].userInput !== undefined && item) {
-          const span = item.querySelector('span');
-          if (obj.data[y][x].userInput !== null) {
-            span.innerText = obj.data[y][x].userInput;
-            clss({
-              element: item,
-              remove: m.get('.', 'invisible', true),
-              add: m.get('.', 'changed', true),
-            });
-          } else if (obj.data[y][x].userInput === null) {
-            clss({
-              element: item,
-              add: m.get('.', 'invisible', true),
-              remove: m.get('.', 'changed', true),
-            });
-          }
-        }
-      }
-      return resolve();
-    });
-  };
+    }
+    return resolve();
+  });
 
   obj.showWinScreen = () => {
     const endTime = new Date().getTime();
@@ -852,9 +836,9 @@ m.gen = __cache(m.gen, hash);
       minute,
       seconds,
     } = convertMS(gameTime);
-    const $hour = s(hour).length === 1 ? '0' + hour:hour;
-    const $minute = s(minute).length === 1 ? '0' + minute:minute;
-    const $seconds = s(seconds).length === 1 ? '0' + seconds:seconds;
+    const $hour = s(hour).length === 1 ? `0${hour}` : hour;
+    const $minute = s(minute).length === 1 ? `0${minute}` : minute;
+    const $seconds = s(seconds).length === 1 ? `0${seconds}` : seconds;
     const t = `${$hour}:${$minute}:${$seconds}`;
 
     obj.winnerScreen = element('div', {
@@ -865,13 +849,13 @@ m.gen = __cache(m.gen, hash);
     obj.winnerInfo1 = element('div', {
       id: m.get('.', 'winnerInfo1', true),
       class: m.get('.', 'winnerInfo1', true),
-      text: `Congratulations!`,
+      text: 'Congratulations!',
     });
 
     obj.winnerInfo2 = element('div', {
       id: m.get('.', 'winnerInfo2', true),
       class: m.get('.', 'winnerInfo2', true),
-      text: `You Win!`,
+      text: 'You Win!',
     });
 
     obj.timeInfo = element('div', {
@@ -883,7 +867,7 @@ m.gen = __cache(m.gen, hash);
     obj.playAgain = element('div', {
       id: m.get('.', 'playAgain', true),
       class: `${m.get('.', 'btn', true)} ${m.get('.', 'playAgain', true)}`,
-      text: `Play Again!`,
+      text: 'Play Again!',
       event: {
         type: 'click',
         handler() {
@@ -900,39 +884,36 @@ m.gen = __cache(m.gen, hash);
     insert(obj.winnerScreen);
   };
 
-  obj.watchWin = (arg) => {
-    return new Promise((resolve, reject) => {
-      if (obj.isStartGame && !obj.isWin) {
-        let isWin = true;
-        for (let dy = 0; dy < obj.data.length; dy++) {
-          for (let dx = 0; dx < obj.data[dy].length; dx++) {
-            const element = obj.data[dy][dx];
-            if (element.userInput!== undefined) {
-              if ((element.isStripeError || element.isColumnError || element.isAreaError) || !element.userInput) {
-                isWin = false;
-                break;
-              }
+  obj.watchWin = (arg) => new Promise((resolve, reject) => {
+    if (obj.isStartGame && !obj.isWin) {
+      let isWin = true;
+      for (let dy = 0; dy < obj.data.length; dy++) {
+        for (let dx = 0; dx < obj.data[dy].length; dx++) {
+          const element = obj.data[dy][dx];
+          if (element.userInput !== undefined) {
+            if ((element.isStripeError || element.isColumnError || element.isAreaError) || !element.userInput) {
+              isWin = false;
+              break;
             }
           }
-          if (!isWin) break;
         }
-        if (isWin) {
-          obj.isWin = true;
-          obj.showWinScreen();
-        }
-        return resolve();
-      } else {
-        return resolve();
+        if (!isWin) break;
       }
-    });
-  };
+      if (isWin) {
+        obj.isWin = true;
+        obj.showWinScreen();
+      }
+      return resolve();
+    }
+    return resolve();
+  });
 
-  obj.makeGame = (_levelSelector='ease') => {
+  obj.makeGame = (_levelSelector = 'ease') => {
     obj.startTime = new Date().getTime();
     const levels = {
-      'ease': [13, 23],
-      'medium': [4, 8, 12, 16, 23],
-      'hard': [2, 3, 5],
+      ease: [13, 23],
+      medium: [4, 8, 12, 16, 23],
+      hard: [2, 3, 5],
     };
     let levelSelector = null;
     if (!Object.keys(levels).includes(_levelSelector)) levelSelector = 'ease';
@@ -952,10 +933,10 @@ m.gen = __cache(m.gen, hash);
     const startGameHandler = (level = 'ease') => {
       obj.makeGame(level);
 
-      clss({element: obj.scene, remove: m.get('.', 'hidden', true)});
-      clss({element: obj.levelSelector, add: m.get('.', 'hidden', true)});
-      clss({element: obj.startScreen, add: m.get('.', 'hidden', true)});
-      clss({element: obj.navigationPanel, remove: m.get('.', 'hidden', true)});
+      clss({ element: obj.scene, remove: m.get('.', 'hidden', true) });
+      clss({ element: obj.levelSelector, add: m.get('.', 'hidden', true) });
+      clss({ element: obj.startScreen, add: m.get('.', 'hidden', true) });
+      clss({ element: obj.navigationPanel, remove: m.get('.', 'hidden', true) });
       obj.render();
       obj.isSceneReady = true;
       obj.isStartGame = true;
@@ -1010,9 +991,9 @@ m.gen = __cache(m.gen, hash);
       event: {
         type: 'click',
         handler() {
-          clss({element: obj.scene, remove: m.get('.', 'hidden', true)});
-          clss({element: obj.startScreen, add: m.get('.', 'hidden', true)});
-          clss({element: obj.navigationPanel, remove: m.get('.', 'hidden', true)});
+          clss({ element: obj.scene, remove: m.get('.', 'hidden', true) });
+          clss({ element: obj.startScreen, add: m.get('.', 'hidden', true) });
+          clss({ element: obj.navigationPanel, remove: m.get('.', 'hidden', true) });
           obj.render();
           obj.isSceneReady = true;
         },
@@ -1026,7 +1007,7 @@ m.gen = __cache(m.gen, hash);
       event: {
         type: 'click',
         handler() {
-          clss({element: obj.levelSelector, remove: m.get('.', 'hidden', true)});
+          clss({ element: obj.levelSelector, remove: m.get('.', 'hidden', true) });
         },
       },
     });
@@ -1041,8 +1022,8 @@ m.gen = __cache(m.gen, hash);
     insert(obj.levelSelectorHard, obj.levelSelector);
     insert(obj.levelSelector);
 
-    clss({element: obj.loading, add: m.get('.', 'hidden', true)});
-    clss({element: obj.startScreen, remove: m.get('.', 'hidden', true)});
+    clss({ element: obj.loading, add: m.get('.', 'hidden', true) });
+    clss({ element: obj.startScreen, remove: m.get('.', 'hidden', true) });
   };
 
   obj.makeNavigation = () => {
@@ -1072,7 +1053,7 @@ m.gen = __cache(m.gen, hash);
   };
 
   obj.init = async () => {
-    obj.cssCorn = new $CssCorn({id: m.get('.', 'cssCorn', true), willRender: true});
+    obj.cssCorn = new $CssCorn({ id: m.get('.', 'cssCorn', true), willRender: true });
     obj.addStyles();
     await obj.makeScene();
     await obj.createData();
