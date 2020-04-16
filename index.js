@@ -362,7 +362,7 @@ m.gen = __cache(m.gen, hash);
         justify-content: center;
         align-content: center;
         align-items: center;`)
-      .add(`${m.get('.', 'changed')} span'`, ' opacity: 1!important; ');
+      .add(`${m.get('.', 'changed')} span`, 'opacity: 1!important; ');
   };
 
   obj.makeScene = async () => new Promise(((resolve, reject) => {
