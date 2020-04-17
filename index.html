@@ -5,8 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Sudoku</title>
-  <script type="text/javascript" src="<!-- %css-corn-path% -->/index.js"></script>
-  <script type="text/javascript"  src="<!-- %project-path% -->/index.js"></script>
+  <script type="text/javascript">
+    function browserCheck(reject, resolve) {
+      if(/Edge/.test(navigator.userAgent)) return reject;
+      if(/Trident/.test(navigator.userAgent)) return reject;
+      return resolve;
+    };
+    // FUCCKING IE!!!! FUCCKING EDGE!!!!
+    var handler = browserCheck(
+      function(){
+        var scr1 = document.querySelector('#scr1');
+        var scr2 = document.querySelector('#scr2');
+        scr1.parentNode.removeChild(scr1);
+        scr2.parentNode.removeChild(scr2);
+        var msg = '';
+        msg += 'Please never use Internet Explorer or Microsoft Edge.\r\n';
+        msg += '\r\n';
+        msg += 'Install a modern browser and enjoy the modern internet.\r\n\r\n';
+        var msgEl = document.createElement('p');
+        msgEl.style.whiteSpace = 'pre';
+        msgEl.style.width = '40%';
+        msgEl.style.margin = '100px auto';
+        msgEl.style.fontSize = '40px';
+        msgEl.innerText = msg;
+        document.body.innerText = '';
+
+        var link1 = document.createElement('a');
+        link1.setAttribute('href', 'https://www.google.com/chrome/');
+        link1.innerText = "Google Chrome\r\n\r\n";
+        msgEl.appendChild(link1);
+
+
+        var link2 = document.createElement("a");
+        link2.setAttribute('href', 'https://www.mozilla.org/en-US/firefox/all/');
+        link2.innerText = "Mozilla Firefox\r\n\r\n";
+        msgEl.appendChild(link2);
+
+        document.body.appendChild(msgEl);
+      },
+    function () {
+      var scr1 = document.querySelector('#scr1');
+      var scr2 = document.querySelector('#scr2');
+      var scr1Src = scr1.getAttribute('src');
+      var scr2Src = scr2.getAttribute('src');
+      var scr1Element = document.createElement('script');
+      var scr2Element = document.createElement('script');
+      scr1Element.setAttribute('src', scr1Src);
+      scr2Element.setAttribute('src', scr2Src);
+      document.head.appendChild(scr1Element);
+      document.head.appendChild(scr2Element);
+      scr1.parentNode.removeChild(scr1);
+      scr2.parentNode.removeChild(scr2);
+    });
+    document.addEventListener('DOMContentLoaded', handler);
+  </script>
+  <meta id="scr1" type="text/javascript" src="<!-- %css-corn-path% -->/index.js">
+  <meta id="scr2" type="text/javascript"  src="<!-- %project-path% -->/index.js">
 </head>
 <body>
   <div id="loading" class="loading">Loading! Please wait!...</div>
