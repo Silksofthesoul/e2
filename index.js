@@ -1,3 +1,40 @@
+const link = 'https://silksofthesoul.ru/sudoku';
+const gitLink = 'https://github.com/Silksofthesoul/e2';
+let helloFriends = `%c
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   _%c ${link} %c __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+
+%c
+__-----_________________{]%c_________________________________________________
+%c{&&&&&&&#%%&#%&%&%&%&%#%&|]%c__________%cOne File Ninja%c_______________%c1024%c______\\
+   %cby Silksofthesoul    %c{]
+%c
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__| %c ${gitLink} %c__|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+ __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|
+|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|__|   __|
+`;
+console.log(helloFriends,
+  'color: red;', 'color: blue;', 'color: red;', 'color: green;', 'color: blue;', 'color: green;', 'color: blue;', 'color: red;', 'color: blue;', 'color: purple;', 'color: blue;', 'color: red;', 'color: green;', 'color: red;', 'color: blue;', 'color: red;',
+)
 const rndMinMax = (min, max) => Math.random() * (max - min) + min;
 const rndMinMaxInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const rndFromArray = (arr) => arr[rndMinMaxInt(0, arr.length - 1)];
@@ -18,8 +55,7 @@ const getColumn = (matrix, x) => [...matrix].map((item) => item[x]);
 const getStripe = (matrix, y) => [...matrix][y];
 const getMatrixArea = (matrix, startX, startY, width, height) => [...matrix]
   .map((itemY, y) => (y >= startY && y < startY + height
-    ? itemY
-      .map((itemX, x) => (x >= startX && x < startX + width
+    ? itemY.map((itemX, x) => (x >= startX && x < startX + width
         ? itemX : false))
       .filter((itm) => itm !== false) : false))
   .filter((itm) => itm !== false);
@@ -30,33 +66,21 @@ const setMatrixElement = (_matrix, x, y, newVal) => {
 };
 const setMatrixArea = (matrix, startX, startY, width, height, fn) => [...matrix]
   .map((itemY, y) => (y >= startY && y < startY + height
-    ? itemY
-      .map((itemX, x) => (x >= startX && x < startX + width
+    ? itemY.map((itemX, x) => (x >= startX && x < startX + width
         ? fn(x, y, itemX) : itemX))
     : itemY));
-
 const range = (...args) => {
-  let start = 0;
-  let end = 0;
-  let step = 0;
+  let start = 0; let end = 0; let step = 0;
   if (args.length === 0) {
     return [];
   } if (args.length === 1) {
-    start = 0;
-    end = args[0];
-    step = 1;
+    start = 0; end = args[0]; step = 1;
   } else if (args.length === 2) {
-    start = args[0];
-    end = args[1];
-    step = 1;
+    start = args[0]; end = args[1]; step = 1;
   } else if (args.length === 3) {
-    start = args[0];
-    end = args[1];
-    step = args[2];
+    start = args[0]; end = args[1]; step = args[2];
   } else {
-    start = args[0];
-    end = args[1];
-    step = args[2];
+    start = args[0]; end = args[1]; step = args[2];
   }
   const result = [];
   let isRun = true;
@@ -72,14 +96,12 @@ const range = (...args) => {
   return result;
 };
 const inRange = (val, a, b) => val >= a && val < b;
-
 const d = (f, arr) => {
   for (let i = 0; i < arr.length; i++) {
     if (f % arr[i] === 0) return true;
   }
   return false;
 };
-
 const insert = (child, _root = null) => {
   const root = _root || document.body;
   if (!child) return false;
@@ -94,28 +116,20 @@ const element = (type, _params = {}) => {
   if (params.class) newElement.setAttribute('class', params.class);
   if (params.style) newElement.setAttribute('style', params.style);
   if (params.text) newElement.innerText = params.text;
-  if (params.event) {
-    newElement.addEventListener(params.event.type, () => {
-      params.event.handler({ element: newElement });
-    });
-  }
+  if (params.title) newElement.title = params.title;
+  if (params.event) newElement.addEventListener(params.event.type, () => { params.event.handler({ element: newElement }); });
+  if(type === 'a' && params.href) newElement.setAttribute('href', params.href);
+  if(type === 'a' && params.target) newElement.setAttribute('target', params.target);
+  if(type === 'img' && params.src) newElement.setAttribute('src', params.src);
+  if(type === 'img' && params.alt) newElement.setAttribute('src', params.alt);
   return newElement;
 };
 const clss = (arg) => {
   if (!arg && !arg.element) return false;
   if (arg.has) return arg.element.classList.contains(arg.has);
-  if (arg.add) {
-    if (!arg.element.classList.contains(arg.add)) {
-      arg.element.classList.add(arg.add);
-    }
-  }
-  if (arg.remove) {
-    if (arg.element.classList.contains(arg.remove)) {
-      arg.element.classList.remove(arg.remove);
-    }
-  }
+  if (arg.add) if (!arg.element.classList.contains(arg.add)) arg.element.classList.add(arg.add);
+  if (arg.remove) if (arg.element.classList.contains(arg.remove)) arg.element.classList.remove(arg.remove);
 };
-
 const s = (_) => JSON.stringify(_);
 const convertMS = (milliseconds) => {
   // from https://gist.github.com/Erichain/6d2c2bf16fe01edfcffa
@@ -134,7 +148,6 @@ const convertMS = (milliseconds) => {
     seconds,
   };
 };
-
 function __cache(func, hash) {
   const cache = new Map();
   return function () {
@@ -144,12 +157,8 @@ function __cache(func, hash) {
     cache.set(key, result);
     return result;
   };
-}
-
-function hash(args) {
-  return `${args[0]},${args[1]}`;
-}
-
+};
+const hash = (args) =>`${args[0]},${args[1]}`;
 const m = {
   gen(start, end) {
     const library = 'qwertyuiopasdfghjklzxcvbnm_';
@@ -163,7 +172,6 @@ const m = {
   },
 };
 m.gen = __cache(m.gen, hash);
-
 (() => {
   const obj = {
     cssCorn: null,
@@ -172,7 +180,6 @@ m.gen = __cache(m.gen, hash);
     isSceneReady: false,
     isStartGame: false,
   };
-
   const countX = 9;
   const countY = countX;
   const fonts = [
@@ -189,46 +196,32 @@ m.gen = __cache(m.gen, hash);
     '"Courier New", Courier, monospace',
     '"Lucida Console", Monaco, monospace',
   ];
-
   obj.addStyles = () => {
-    // console.log('[addStyles]');
     const wWidth = window.innerWidth - 20;
     const wHeigth = window.innerHeight - 20;
     const sqSize = Math.min(wWidth, wHeigth);
     obj.cssCorn
-      .add('body', `
-        display: flex;
+      .add('body', ` display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         align-content: center;
         position: fixed;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+        width: 100%; height: 100%;
+        margin: 0; padding: 0;
         line-height: 1;
-        font-size: 18px;
-    `)
-      .add(m.get('.', 'loading'), `
-        font-size: ${rndMinMax(1.2, 4.5)}em;
-        font-family: ${rndFromArray(fonts)};
-    `)
-      .add(m.get('.', 'hidden'), `
-        display: none!important;
-    `)
-      .add(m.get('.', 'scene'), `
-        display: flex;
+        font-size: 18px; `)
+      .add(m.get('.', 'loading'), ` font-size: ${rndMinMax(1.2, 4.5)}em; font-family: ${rndFromArray(fonts)}; `)
+      .add(m.get('.', 'hidden'), ` display: none!important; `)
+      .add(m.get('.', 'scene'), ` display: flex;
         flex-direction: row;
         justify-content: flex-start;
         flex-wrap: wrap;
         background: rgba(255, 0, 0, 0.15);
         width: ${sqSize}px;
         height: ${sqSize}px;
-        transition: width 0.15s 0s ease-out, height 0.1s 0s ease-out;
-    `)
-      .add(`${m.get('.', 'scene')} div`, `
-        box-sizing: border-box;
+        transition: width 0.15s 0s ease-out, height 0.1s 0s ease-out; `)
+      .add(`${m.get('.', 'scene')} div`, ` box-sizing: border-box;
         text-align: center;
         line-height: 1;
         outline: 1px solid rgba(255, 0, 0, 0.25);
@@ -240,14 +233,10 @@ m.gen = __cache(m.gen, hash);
         align-items: center;
         align-content: center;
         transition: width 0.15s 0s ease-out, height 0.15s 0s ease-out, font-size 0.25s 0s ease-out;
-        font-weight 0.25s 0s ease-out;
-    `)
+        font-weight 0.25s 0s ease-out; `)
       .add(`${m.get('.', 'scene')} div${m.get('.', 'error')}:not(${m.get('.', 'changed')})`, 'background: rgb(255, 220, 220)!important;')
-      .add(`${m.get('.', 'scene')} div span`, `
-        transition: transform 0.25s 0s ease-out;
-    `)
-      .add(`${m.get('.', 'startScreen')}`, `
-        display: flex;
+      .add(`${m.get('.', 'scene')} div span`, ` transition: transform 0.25s 0s ease-out; `)
+      .add(`${m.get('.', 'startScreen')}`, ` display: flex;
         background-color: #fff;
         flex-direction: column;
         justify-content: center;
@@ -259,10 +248,8 @@ m.gen = __cache(m.gen, hash);
         margin: 0;
         padding: 0;
         line-height: 1;
-        font-size: 18px;
-    `)
-      .add(`${m.get('.', 'btn')}`, `
-        display: inline-block;
+        font-size: 18px; `)
+      .add(`${m.get('.', 'btn')}`, ` display: inline-block;
         background-color: #fff;
         outline: 1px solid #ccc;
         padding: 1em 2em;
@@ -271,27 +258,42 @@ m.gen = __cache(m.gen, hash);
         font-size: 18px;
         font-family: ${rndFromArray(fonts)};
         user-select: none;
-        cursor: pointer;
-    `)
-      .add(`${m.get('.', 'btn')}:hover`, `
-        display: inline-block;
+        cursor: pointer; `)
+      .add(`${m.get('.', 'btn')}:hover`, ` display: inline-block;
         background-color: #efa;
-        outline: 2px solid #ccc;
-    `)
-      .add(`${m.get('.', 'navigationPanel')}`, `
-      display: flex;
+        outline: 2px solid #ccc; `)
+      .add(`${m.get('.', 'navigationPanel')}`, ` display: flex;
       flex-direction: column;
       justify-content: center;
       position: fixed;
       top: 20px;
       left: 20px;
-      padding: 1em;
-    `)
-
+      padding: 1em; `)
+      .add(`${m.get('.', 'linkPanel')}`, ` display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 1em; `)
+      .add(`${m.get('.', 'icon')}`, ` border-radius: 50%;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 50%;
+      background-color: rgba(255, 218, 0, 0);
+      margin: 1em;
+      transition: background-size 0.15s 0s ease-out, background-color 0.55s 0s ease-out; `)
+      .add(`${m.get('.', 'icon')}:hover,${m.get('.', 'icon')}:focus,${m.get('.', 'icon')}:active`, ` width: 32px; height: 32px;
+      cursor: pointer;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 90%;
+      background-color: rgba(255, 218, 0, 1); `)
       .add(`${m.get('.', 'interactive')}`, 'cursor: pointer;')
       .add(`${m.get('.', 'btnMenuInteractive')}`, 'cursor: pointer;')
-      .add(`${m.get('.', 'menuInteractiveWrapper')}`, `
-          display: flex;
+      .add(`${m.get('.', 'menuInteractiveWrapper')}`, ` display: flex;
           flex-direction: row;
           justify-content: center;
           align-items: center;
@@ -301,62 +303,46 @@ m.gen = __cache(m.gen, hash);
           width: 100%;
           height: 100%;
           top: 0px;
-          left: 0px;
-        `)
-      .add(`${m.get('.', 'menuInteractive')}`, `
-          display: grid;
+          left: 0px; `)
+      .add(`${m.get('.', 'menuInteractive')}`, ` display: grid;
           grid-template-columns: 1fr 1fr 1fr;
           grid-column-gap: 1em;
           grid-template-areas: "${m.get('.', 'a1', true)} ${m.get('.', 'a2', true)} ${m.get('.', 'a3', true)}" "${m.get('.', 'a4', true)} ${m.get('.', 'a5', true)} ${m.get('.', 'a6', true)}" "${m.get('.', 'a7', true)} ${m.get('.', 'a8', true)} ${m.get('.', 'a9', true)}" "${m.get('.', 'a10', true)} ${m.get('.', 'a11', true)} ${m.get('.', 'a12', true)}";
           background-color: white;
           padding: 1em;
           box-sizing: border-box;
-          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-        `)
+          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5); `)
       .add(`${m.get('.', 'invisible')}`, 'background: rgb(230, 230, 230)!important;')
       .add(`${m.get('.', 'changed')}`, 'background: rgb(220, 220, 255)!important;')
       .add(`${m.get('.', 'changed')}${m.get('.', 'error')}`, 'background: rgb(255, 128, 128)!important;')
       .add(`${m.get('.', 'invisible')} span`, 'opacity: 0!important; ')
-      .add(`${m.get('.', 'winnerScreen')}`, `
-          z-index: 1;
+      .add(`${m.get('.', 'winnerScreen')}`, ` z-index: 1;
           background: rgba(0,0,0,0.8);
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-content: center;
-          align-items: center;
-        `)
-      .add(`${m.get('.', 'winnerInfo1')}`, `
-        font-family: ${rndFromArray(fonts)};
+          align-items: center; `)
+      .add(`${m.get('.', 'winnerInfo1')}`, ` font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
-        padding-bottom: 0.25em;
-        `)
-      .add(`${m.get('.', 'winnerInfo2')}`, `
-        font-family: ${rndFromArray(fonts)};
+        padding-bottom: 0.25em; `)
+      .add(`${m.get('.', 'winnerInfo2')}`, ` font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
-        padding-bottom: 0.25em;
-        `)
-      .add(`${m.get('.', 'timeInfo')}`, `
-        font-family: ${rndFromArray(fonts)};
+        padding-bottom: 0.25em; `)
+      .add(`${m.get('.', 'timeInfo')}`, ` font-family: ${rndFromArray(fonts)};
         color: white;
         font-size: 2em;
-        padding-bottom: 1.25em;
-        `)
-      .add(`${m.get('.', 'levelSelector')}`, `
-        z-index: 1;
+        padding-bottom: 1.25em; `)
+      .add(`${m.get('.', 'levelSelector')}`, ` z-index: 1;
         background: rgba(0,0,0,0.8);
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -364,7 +350,6 @@ m.gen = __cache(m.gen, hash);
         align-items: center;`)
       .add(`${m.get('.', 'changed')} span`, 'opacity: 1!important; ');
   };
-
   obj.makeScene = async () => new Promise(((resolve, reject) => {
     setTimeout(() => {
       // console.log('[makeScene]');
@@ -378,7 +363,6 @@ m.gen = __cache(m.gen, hash);
       resolve();
     }, 1000);
   }));
-
   obj.createData = async () => {
     const asset = range(1, 9);
     const width = 9;
@@ -397,11 +381,9 @@ m.gen = __cache(m.gen, hash);
       }
       return resolve(newVal);
     });
-
     const generateMatrix = async (_data) => new Promise(async (resolve, reject) => {
       let data = [..._data];
       let [x, y] = [0, 0];
-
       const sectorList = [0, 3, 6];
       let regressionCount = 0;
       let errr = -1;
@@ -412,12 +394,10 @@ m.gen = __cache(m.gen, hash);
           let areaStartX = inRange(x, 0, 3) ? sectorList[0] : inRange(x, 3, 6) ? sectorList[1] : inRange(x, 5, 9) ? sectorList[2] : null;
           let areaStartY = inRange(y, 0, 3) ? sectorList[0] : inRange(y, 3, 6) ? sectorList[1] : inRange(y, 5, 9) ? sectorList[2] : null;
           if (areaStartX === null || areaStartY === null) console.log('alarm');
-          const areaWidth = 3;
-          const areaHeight = 3;
+          const [areaWidth, areaHeight] = [3, 3];
           const area = getMatrixArea(data, areaStartX, areaStartY, areaWidth, areaHeight);
           const exclude = [...new Set([...column, ...stripe, ...area.flat()].filter((itm) => itm !== EMPTY))];
-          let newVal = null;
-          let isError = false;
+          let [newVal, isError] = [null, false];
           try {
             newVal = await generateNewVal(() => rndFromArray(asset), [...exclude]);
           } catch (e) {
@@ -450,8 +430,6 @@ m.gen = __cache(m.gen, hash);
       }
       return resolve(data);
     });
-
-
     let data = [];
     const maxTry = 20;
     let tryIt = -1;
@@ -467,13 +445,11 @@ m.gen = __cache(m.gen, hash);
       if (!isError) break;
     }
     if (data.length === 0) window.location.reload();
-
     data = [...data].map((yItem, yyy) => yItem.map((xItem, xxx) => ({
       value: xItem,
       x: xxx,
       y: yyy,
     })));
-
     for (let y = 0; y < data.length; y++) {
       for (let x = 0; x < data[y].length; x++) {
         const column = [...getColumn(data, x)];
@@ -485,31 +461,23 @@ m.gen = __cache(m.gen, hash);
         if (fY || fX) data[y][x].double = true;
       }
     }
-
     obj.data = data;
   };
-
   obj.render = () => {
     if (!obj.data) return false;
     const borderRight = 'border-right: 3px solid rgba(0,0,100,0.5);';
     const borderBottom = 'border-bottom: 3px solid rgba(0,0,100,0.5);';
-
     obj.data.forEach((yItem, y) => {
       yItem.forEach((xItem, x) => {
         let stdStyle = '';
         stdStyle += `${x === 2 || x === 5 ? borderRight : ''}`;
         stdStyle += `${y === 2 || y === 5 ? borderBottom : ''}`;
         stdStyle += 'background: rgba(255, 255, 255, 1);';
-        stdStyle += `
-          font-size: ${rndMinMax(0.9, 3.1)}em;
-          font-family: ${rndFromArray(fonts)};
-        `;
-
+        stdStyle += `font-size: ${rndMinMax(0.9, 3.1)}em; font-family: ${rndFromArray(fonts)};`;
         let error = '';
         error += `${x === 2 || x === 5 ? borderRight : ''}`;
         error += `${y === 2 || y === 5 ? borderBottom : ''}`;
         error += 'background: rgba(255, 0, 0, 0.30);';
-
         const newElement = element('div', {
           class: xItem.isVisible === undefined || xItem.isVisible === false ? '' : `${m.get('.', 'invisible', true)} ${m.get('.', 'interactive', true)}`,
           style: xItem.double ? error : stdStyle,
@@ -531,19 +499,12 @@ m.gen = __cache(m.gen, hash);
       });
     });
   };
-
   obj.showMenuVariants = (params) => {
     const { x, y, element: el = null } = params;
     if (obj.data[y][x]) {
       if (obj.data[y][x].userInput || obj.data[y][x].userInput === null) {
-        const divMenuWrapper = element('div', {
-          class: m.get('.', 'menuInteractiveWrapper', true),
-          style: '',
-        });
-        const divMenu = element('div', {
-          class: m.get('.', 'menuInteractive', true),
-          style: '',
-        });
+        const divMenuWrapper = element('div', { class: m.get('.', 'menuInteractiveWrapper', true) });
+        const divMenu = element('div', { class: m.get('.', 'menuInteractive', true)});
         const buttonsArray = '123456789X'.split('');
         buttonsArray.forEach((item) => {
           const newElement = element('div', {
@@ -572,7 +533,6 @@ m.gen = __cache(m.gen, hash);
       }
     }
   };
-
   obj.loop = (callbackArray) => {
     let timeout = rndMinMaxInt(80, 320);
     const process = async () => {
@@ -582,7 +542,6 @@ m.gen = __cache(m.gen, hash);
       const wWidth = window.innerWidth - 20;
       const wHeigth = window.innerHeight - 20;
       const sqSize = Math.min(wWidth, wHeigth);
-
       for (let i = 0; i < callbackArray.data.length; i++) {
         await callbackArray.data[i]();
       }
@@ -601,12 +560,10 @@ m.gen = __cache(m.gen, hash);
         }
         x++;
       }
-
       setTimeout(process, timeout);
     };
     process();
   };
-
   obj.sizeControll = (arg) => new Promise((resolve, reject) => {
     if (obj.isSceneReady) {
       const {
@@ -619,7 +576,6 @@ m.gen = __cache(m.gen, hash);
     }
     return resolve();
   });
-
   obj.charsMutate = (arg) => new Promise((resolve, reject) => {
     if (obj.isSceneReady) {
       const {
@@ -635,7 +591,6 @@ m.gen = __cache(m.gen, hash);
     }
     return resolve();
   });
-
   obj.processErrors = (arg) => new Promise((resolve, reject) => {
     if (obj.isSceneReady) {
       const {
@@ -656,7 +611,6 @@ m.gen = __cache(m.gen, hash);
     }
     return resolve();
   });
-
   obj.columnDoubleSearching = (arg) => new Promise((resolve, reject) => {
     if (obj.isStartGame) {
       const data = [...obj.data];
@@ -724,16 +678,11 @@ m.gen = __cache(m.gen, hash);
             }
             return false;
           }).filter((itm) => !!itm);
-
           if (double.length > 0) {
             if (double.length === 1) {
-              if (double[0].value === double[0].userInput) {
-                obj.data[item.y][item.x].isStripeError = false;
-              }
+              if (double[0].value === double[0].userInput) obj.data[item.y][item.x].isStripeError = false;
             } else {
-              double.forEach((item, i) => {
-                obj.data[item.y][item.x].isStripeError = true;
-              });
+              double.forEach((item, i) => { obj.data[item.y][item.x].isStripeError = true; });
               stripeWithError.push(obj.data[y][x]);
             }
           }
@@ -749,7 +698,6 @@ m.gen = __cache(m.gen, hash);
     }
     resolve();
   });
-
   obj.areaDoubleSearching = (arg) => new Promise((resolve, reject) => {
     if (obj.isStartGame) {
       const data = [...obj.data];
@@ -776,7 +724,6 @@ m.gen = __cache(m.gen, hash);
             }
             return false;
           }).filter((itm) => !!itm);
-
           if (double.length > 0) {
             if (double.length === 1) {
               if (double[0].value === double[0].userInput) {
@@ -801,41 +748,31 @@ m.gen = __cache(m.gen, hash);
     }
     resolve();
   });
-
   obj.userInput = (arg) => new Promise((resolve, reject) => {
     if (obj.isSceneReady) {
-      const {
-        x, y, item, wWidth, wHeigth, sqSize,
-      } = arg;
+      const { x, y, item, wWidth, wHeigth, sqSize } = arg;
       if (obj.data[y][x].userInput !== undefined && item) {
         const span = item.querySelector('span');
         if (obj.data[y][x].userInput !== null) {
           span.innerText = obj.data[y][x].userInput;
           clss({
             element: item,
-            remove: m.get('.', 'invisible', true),
-            add: m.get('.', 'changed', true),
+            remove: m.get('.', 'invisible', true), add: m.get('.', 'changed', true),
           });
         } else if (obj.data[y][x].userInput === null) {
           clss({
             element: item,
-            add: m.get('.', 'invisible', true),
-            remove: m.get('.', 'changed', true),
+            add: m.get('.', 'invisible', true), remove: m.get('.', 'changed', true),
           });
         }
       }
     }
     return resolve();
   });
-
   obj.showWinScreen = () => {
     const endTime = new Date().getTime();
     const gameTime = endTime - obj.startTime;
-    const {
-      hour,
-      minute,
-      seconds,
-    } = convertMS(gameTime);
+    const { hour, minute, seconds, } = convertMS(gameTime);
     const $hour = s(hour).length === 1 ? `0${hour}` : hour;
     const $minute = s(minute).length === 1 ? `0${minute}` : minute;
     const $seconds = s(seconds).length === 1 ? `0${seconds}` : seconds;
@@ -847,20 +784,17 @@ m.gen = __cache(m.gen, hash);
     });
 
     obj.winnerInfo1 = element('div', {
-      id: m.get('.', 'winnerInfo1', true),
-      class: m.get('.', 'winnerInfo1', true),
+      id: m.get('.', 'winnerInfo1', true), class: m.get('.', 'winnerInfo1', true),
       text: 'Congratulations!',
     });
 
     obj.winnerInfo2 = element('div', {
-      id: m.get('.', 'winnerInfo2', true),
-      class: m.get('.', 'winnerInfo2', true),
+      id: m.get('.', 'winnerInfo2', true), class: m.get('.', 'winnerInfo2', true),
       text: 'You Win!',
     });
 
     obj.timeInfo = element('div', {
-      id: m.get('.', 'timeInfo', true),
-      class: m.get('.', 'timeInfo', true),
+      id: m.get('.', 'timeInfo', true), class: m.get('.', 'timeInfo', true),
       text: `Your Time: ${t}`,
     });
 
@@ -883,7 +817,6 @@ m.gen = __cache(m.gen, hash);
     insert(obj.playAgain, obj.winnerScreen);
     insert(obj.winnerScreen);
   };
-
   obj.watchWin = (arg) => new Promise((resolve, reject) => {
     if (obj.isStartGame && !obj.isWin) {
       let isWin = true;
@@ -907,14 +840,9 @@ m.gen = __cache(m.gen, hash);
     }
     return resolve();
   });
-
   obj.makeGame = (_levelSelector = 'ease') => {
     obj.startTime = new Date().getTime();
-    const levels = {
-      ease: [13, 23],
-      medium: [4, 8, 12, 16, 23],
-      hard: [2, 3, 5],
-    };
+    const levels = { ease: [13, 23], medium: [4, 8, 12, 16, 23], hard: [2, 3, 5]};
     let levelSelector = null;
     if (!Object.keys(levels).includes(_levelSelector)) levelSelector = 'ease';
     else levelSelector = _levelSelector;
@@ -928,11 +856,9 @@ m.gen = __cache(m.gen, hash);
       });
     });
   };
-
   obj.makeStartScreen = () => {
     const startGameHandler = (level = 'ease') => {
       obj.makeGame(level);
-
       clss({ element: obj.scene, remove: m.get('.', 'hidden', true) });
       clss({ element: obj.levelSelector, add: m.get('.', 'hidden', true) });
       clss({ element: obj.startScreen, add: m.get('.', 'hidden', true) });
@@ -949,7 +875,6 @@ m.gen = __cache(m.gen, hash);
       id: m.get('.', 'levelSelector', true),
       class: `${m.get('.', 'levelSelector', true)} ${m.get('.', 'hidden', true)}`,
     });
-
     obj.levelSelectorEase = element('div', {
       id: m.get('.', 'btnEase', true),
       class: m.get('.', 'btn', true),
@@ -983,7 +908,6 @@ m.gen = __cache(m.gen, hash);
         },
       },
     });
-
     obj.btnShowSudoku = element('div', {
       id: m.get('.', 'btnShowSudoku', true),
       class: `${m.get('.', 'btnShowSudoku', true)} ${m.get('.', 'btn', true)}`,
@@ -999,7 +923,6 @@ m.gen = __cache(m.gen, hash);
         },
       },
     });
-
     obj.btnStartGame = element('div', {
       id: m.get('.', 'btnStartGame', true),
       class: `${m.get('.', 'btnStartGame', true)} ${m.get('.', 'btn', true)}`,
@@ -1011,21 +934,16 @@ m.gen = __cache(m.gen, hash);
         },
       },
     });
-
-
     insert(obj.btnShowSudoku, obj.startScreen);
     insert(obj.btnStartGame, obj.startScreen);
     insert(obj.startScreen);
-
     insert(obj.levelSelectorEase, obj.levelSelector);
     insert(obj.levelSelectorMedium, obj.levelSelector);
     insert(obj.levelSelectorHard, obj.levelSelector);
     insert(obj.levelSelector);
-
     clss({ element: obj.loading, add: m.get('.', 'hidden', true) });
     clss({ element: obj.startScreen, remove: m.get('.', 'hidden', true) });
   };
-
   obj.makeNavigation = () => {
     obj.navigationPanel = element('div', {
       id: m.get('.', 'navigationPanel', true),
@@ -1042,16 +960,39 @@ m.gen = __cache(m.gen, hash);
         },
       },
     });
-
     insert(obj.navigationBack, obj.navigationPanel);
     insert(obj.navigationPanel);
   };
-
+  obj.makeLinksPanel = () => {
+    obj.linkPanel = element('div', {
+      id: m.get('.', 'linkPanel', true),
+      class: `${m.get('.', 'linkPanel', true)}`,
+    });
+    obj.shareLink = element('a', {
+      id: m.get('.', 'shareLink', true),
+      class: `${m.get('.', 'icon', true)}`,
+      title: 'Copy this page link',
+      href: link,
+      style: `background-image: url('data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIHdpZHRoPSI1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTk2IDBhOTYgOTYgMCAxIDAgOTYgOTYgOTYuMTA4IDk2LjEwOCAwIDAgMCAtOTYtOTZ6bS0yNCA5NmMwIC41MjQtLjAyMyAxLjA0Mi0uMDU2IDEuNTU3bDM1Ljk5MiAyNS43MDlhMjMuOTk0IDIzLjk5NCAwIDEgMSAtMTAuMzgxIDEyLjI0N2wtMzIuMTc5LTIyLjk4NGEyNCAyNCAwIDEgMSAwLTMzLjA1OGwzMi4xNzktMjIuOTg0YTI0LjA0NSAyNC4wNDUgMCAxIDEgMTAuMzgxIDEyLjI0N2wtMzUuOTkyIDI1LjcwOWMuMDMzLjUxNS4wNTYgMS4wMzMuMDU2IDEuNTU3eiIvPjwvc3ZnPg==');`,
+      target: '_blank'
+    });
+    obj.gitLink = element('a', {
+      id: m.get('.', 'gitLink', true),
+      class: `${m.get('.', 'icon', true)}`,
+      title: 'Explore code',
+      href: gitLink,
+      style: `background-image:url('data:image/svg+xml;base64,PHN2ZyBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNCAyNCIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMTIgLjVjLTYuNjMgMC0xMiA1LjI4LTEyIDExLjc5MiAwIDUuMjExIDMuNDM4IDkuNjMgOC4yMDUgMTEuMTg4LjYuMTExLjgyLS4yNTQuODItLjU2NyAwLS4yOC0uMDEtMS4wMjItLjAxNS0yLjAwNS0zLjMzOC43MTEtNC4wNDItMS41ODItNC4wNDItMS41ODItLjU0Ni0xLjM2MS0xLjMzNS0xLjcyNS0xLjMzNS0xLjcyNS0xLjA4Ny0uNzMxLjA4NC0uNzE2LjA4NC0uNzE2IDEuMjA1LjA4MiAxLjgzOCAxLjIxNSAxLjgzOCAxLjIxNSAxLjA3IDEuODAzIDIuODA5IDEuMjgyIDMuNDk1Ljk4MS4xMDgtLjc2My40MTctMS4yODIuNzYtMS41NzctMi42NjUtLjI5NS01LjQ2Ni0xLjMwOS01LjQ2Ni01LjgyNyAwLTEuMjg3LjQ2NS0yLjMzOSAxLjIzNS0zLjE2NC0uMTM1LS4yOTgtLjU0LTEuNDk3LjEwNS0zLjEyMSAwIDAgMS4wMDUtLjMxNiAzLjMgMS4yMDkuOTYtLjI2MiAxLjk4LS4zOTIgMy0uMzk4IDEuMDIuMDA2IDIuMDQuMTM2IDMgLjM5OCAyLjI4LTEuNTI1IDMuMjg1LTEuMjA5IDMuMjg1LTEuMjA5LjY0NSAxLjYyNC4yNCAyLjgyMy4xMiAzLjEyMS43NjUuODI1IDEuMjMgMS44NzcgMS4yMyAzLjE2NCAwIDQuNTMtMi44MDUgNS41MjctNS40NzUgNS44MTcuNDIuMzU0LjgxIDEuMDc3LjgxIDIuMTgyIDAgMS41NzgtLjAxNSAyLjg0Ni0uMDE1IDMuMjI5IDAgLjMwOS4yMS42NzguODI1LjU2IDQuODAxLTEuNTQ4IDguMjM2LTUuOTcgOC4yMzYtMTEuMTczIDAtNi41MTItNS4zNzMtMTEuNzkyLTEyLTExLjc5MnoiIGZpbGw9IiMyMTIxMjEiLz48L3N2Zz4=');`,
+      target: '_blank'
+    });
+    insert(obj.shareLink, obj.linkPanel);
+    insert(obj.gitLink, obj.linkPanel);
+    insert(obj.linkPanel);
+  };
   obj.makeUI = () => {
     obj.makeStartScreen();
     obj.makeNavigation();
+    obj.makeLinksPanel();
   };
-
   obj.init = async () => {
     obj.cssCorn = new $CssCorn({ id: m.get('.', 'cssCorn', true), willRender: true });
     obj.addStyles();
@@ -1060,38 +1001,23 @@ m.gen = __cache(m.gen, hash);
     obj.makeUI();
     obj.loop({
       render: [
-        obj.sizeControll,
-        obj.charsMutate,
-        obj.userInput,
-        obj.processErrors,
-      ],
-      data: [
-        obj.columnDoubleSearching,
-        obj.stripeDoubleSearching,
-        obj.areaDoubleSearching,
-        obj.watchWin,
-      ],
+        obj.sizeControll, obj.charsMutate, obj.userInput, obj.processErrors, ],
+      data: [ obj.columnDoubleSearching, obj.stripeDoubleSearching, obj.areaDoubleSearching, obj.watchWin, ],
     });
   };
-
   obj.run = () => {
     obj.loading = document.body.querySelector('.loading');
     if (!obj.loading) {
       obj.loading = element('div', {
-        id: m.get('.', 'loading', true),
-        class: m.get('.', 'loading'),
+        id: m.get('.', 'loading', true), class: m.get('.', 'loading'),
         text: 'Loading! Please wait!...',
       });
     } else {
       obj.loading.id = m.get('.', 'loading', true);
-      clss({
-        element: obj.loading,
-        remove: 'loading',
-        add: m.get('.', 'loading', true),
-      });
+      clss({ element: obj.loading, remove: 'loading', add: m.get('.', 'loading', true) });
     }
     insert(obj.loading);
     obj.init();
   };
-  document.addEventListener('DOMContentLoaded', () => obj.run());
+  obj.run();
 })();
