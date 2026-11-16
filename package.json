@@ -12,8 +12,5 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.13.0"
-  },
-  "dependencies": {
-    "@silksofthesoul/css-corn": "^1.0.1"
   }
 }

@@ -50,6 +50,8 @@
       var scr2Src = scr2.getAttribute('src');
       var scr1Element = document.createElement('script');
       var scr2Element = document.createElement('script');
+      scr1Element.async = false;
+      scr2Element.async = false;
       scr1Element.setAttribute('src', scr1Src);
       scr2Element.setAttribute('src', scr2Src);
       document.head.appendChild(scr1Element);
@@ -59,11 +61,10 @@
     });
     document.addEventListener('DOMContentLoaded', handler);
   </script>
-  <meta id="scr1" type="text/javascript" src="<!-- %css-corn-path% -->/index.js">
-  <meta id="scr2" type="text/javascript"  src="<!-- %project-path% -->/index.js">
+  <meta id="scr1" type="text/javascript" src="./vendor/css-corn/index.js">
+  <meta id="scr2" type="text/javascript"  src="./index.js">
 </head>
 <body>
   <div id="loading" class="loading">Loading! Please wait!...</div>
-  <!-- %yandex-metrica% -->
 </body>
 </html>
